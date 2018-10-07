@@ -26,15 +26,13 @@ namespace quirkpad
         string filePath = "";
         
         //styles
-        TextStyle BlueStyle = new TextStyle(Brushes.DodgerBlue, null, FontStyle.Regular);
-        TextStyle CyanStyle = new TextStyle(Brushes.DarkTurquoise, null, FontStyle.Regular);
+        TextStyle BrownStyle = new TextStyle(Brushes.Chocolate, null, FontStyle.Regular);
+        TextStyle CyanStyle = new TextStyle(Brushes.DodgerBlue, null, FontStyle.Regular);
         TextStyle RedStyle = new TextStyle(Brushes.Red, null, FontStyle.Regular);
         TextStyle OrangeStyle = new TextStyle(Brushes.Orange, null, FontStyle.Regular);
         TextStyle GrayStyle = new TextStyle(Brushes.LightSlateGray, null, FontStyle.Regular);
         TextStyle MagentaStyle = new TextStyle(Brushes.MediumOrchid, null, FontStyle.Regular);
-        TextStyle GreenStyle = new TextStyle(Brushes.MediumAquamarine, null, FontStyle.Regular); 
-        TextStyle BrownStyle = new TextStyle(Brushes.Sienna, null, FontStyle.Regular);
-        TextStyle MaroonStyle = new TextStyle(Brushes.RosyBrown, null, FontStyle.Regular);
+        TextStyle GreenStyle = new TextStyle(Brushes.LimeGreen, null, FontStyle.Regular); 
         MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.LightSlateGray)));
         
         public MainForm()
@@ -83,34 +81,24 @@ namespace quirkpad
             fctb.LeftBracket2 = '{';
             fctb.RightBracket2 = '}';
             //clear style of changed range
-            e.ChangedRange.ClearStyle(BlueStyle, RedStyle, OrangeStyle, CyanStyle, GrayStyle, MagentaStyle, GreenStyle, BrownStyle);
+            e.ChangedRange.ClearStyle(BrownStyle, RedStyle, OrangeStyle, CyanStyle, GrayStyle, MagentaStyle, GreenStyle);
 
-            //string highlighting
-            e.ChangedRange.SetStyle(OrangeStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
             //comment highlighting
             e.ChangedRange.SetStyle(GrayStyle, @"//.*$", RegexOptions.Multiline);
-            e.ChangedRange.SetStyle(GrayStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+            e.ChangedRange.SetStyle(GrayStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Multiline);
             e.ChangedRange.SetStyle(GrayStyle, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
+            //string highlighting
+            e.ChangedRange.SetStyle(MagentaStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
             //number highlighting
-            e.ChangedRange.SetStyle(RedStyle, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
-            //attribute highlighting
-            //e.ChangedRange.SetStyle(GrayStyle, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
-            //class name highlighting
-            //e.ChangedRange.SetStyle(CyanStyle, @"\b(class|struct|enum|interface)\s+(?<range>\w+?)\b");
-            //keyword highlighting
-            e.ChangedRange.SetStyle(CyanStyle, @"\b(break|case|catch|class|const|continue|default|do|else|finally|for|function|goto|if|in|new|return|switch|this|throw|try|typeof|while|let|var|)\b");
+            e.ChangedRange.SetStyle(GreenStyle, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            //keywords
+            e.ChangedRange.SetStyle(OrangeStyle, @"\b(break|case|catch|class|const|continue|default|do|else|finally|for|function|goto|if|in|new|return|switch|this|throw|try|typeof|while|let|var|)\b");
             //get and set deserve their own
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(get|set)\b");
+            e.ChangedRange.SetStyle(BrownStyle, @"\b(get|set)\b");
             //special values, such as true, false, null, and undefined
-            e.ChangedRange.SetStyle(MagentaStyle, @"\b(true|false|null|undefined|Infinity|NaN|eval)\b");
-            
-            //clear folding markers
-            //e.ChangedRange.ClearFoldingMarkers();
-
-            //set folding markers causes problems!!!!
-            //e.ChangedRange.SetFoldingMarkers("{", "}");//allow to collapse brackets block
-            //e.ChangedRange.SetFoldingMarkers(@"#region\b", @"#endregion\b");//allow to collapse #region blocks
-            //e.ChangedRange.SetFoldingMarkers(@"/\*", @"\*/");//allow to collapse comment block
+            e.ChangedRange.SetStyle(RedStyle, @"\b(true|false|null|undefined|Infinity|NaN|eval|prototype)\b");
+            //all other letters are blue
+            e.ChangedRange.SetStyle(CyanStyle, @"\w");
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -356,7 +344,7 @@ namespace quirkpad
         //opening a file
         void OpenFile() {
             statusLabel.Text = "Opening File...";
-            openFileDialog.Filter = "Text Files | *.txt | All files | *.*";
+            openFileDialog.Filter = "Javascript files |*.js| All files |*.*";
             
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 filePath = openFileDialog.FileName;
@@ -373,7 +361,7 @@ namespace quirkpad
             
             //test if a file path exists
             if (filePath == "") {
-                saveFileDialog.Filter = "Javascript files | *.js | All files | *.*";
+                saveFileDialog.Filter = "Javascript files |*.js| All files | *.*";
             
                 if (saveFileDialog.ShowDialog() == DialogResult.OK) {
                     filePath = saveFileDialog.FileName;
@@ -415,5 +403,6 @@ namespace quirkpad
             Application.Exit();
         }
         
+        void FctbLoad(object sender, EventArgs e) { }      
     }
 }
