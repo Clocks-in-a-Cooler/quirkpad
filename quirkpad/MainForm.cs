@@ -403,6 +403,42 @@ namespace quirkpad
             Application.Exit();
         }
         
-        void FctbLoad(object sender, EventArgs e) { }      
+        void FctbLoad(object sender, EventArgs e) { }
+        
+        void Paste() {
+            fctb.Paste();
+        }
+        
+        void Cut() {
+            fctb.Cut();
+        }
+        
+        void Copy() {
+            fctb.Copy();
+        }
+        
+        void CutToolStripMenuItemClick(object sender, EventArgs e) {
+            Cut();
+        }
+        
+        void CopyToolStripMenuItemClick(object sender, EventArgs e) {
+            Copy();
+        }
+        
+        void PasteToolStripMenuItemClick(object sender, EventArgs e) {
+            Paste();
+        }
+        
+        void CutToolStripButtonClick(object sender, EventArgs e) {
+            Cut();
+        }
+        
+        void CopyToolStripButtonClick(object sender, EventArgs e) {
+            Copy();
+        }
+        
+        void PasteToolStripButtonClick(object sender, EventArgs e) {
+            Paste();
+        }
     }
 }
