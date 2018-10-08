@@ -22,18 +22,9 @@ namespace quirkpad
     /// </summary>
     public partial class MainForm : Form
     {
-        string lang = "JS";
         string filePath = "";
-        
-        //styles
-        TextStyle BrownStyle = new TextStyle(Brushes.Chocolate, null, FontStyle.Regular);
-        TextStyle CyanStyle = new TextStyle(Brushes.DodgerBlue, null, FontStyle.Regular);
-        TextStyle RedStyle = new TextStyle(Brushes.Red, null, FontStyle.Regular);
-        TextStyle OrangeStyle = new TextStyle(Brushes.Orange, null, FontStyle.Regular);
-        TextStyle GrayStyle = new TextStyle(Brushes.LightSlateGray, null, FontStyle.Regular);
-        TextStyle MagentaStyle = new TextStyle(Brushes.MediumOrchid, null, FontStyle.Regular);
-        TextStyle GreenStyle = new TextStyle(Brushes.LimeGreen, null, FontStyle.Regular); 
-        MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.LightSlateGray)));
+        Styles styles = new Styles();
+        string[] keywords = OptionsReader.ReadOptions("options.txt");
         
         public MainForm()
         {
@@ -45,60 +36,50 @@ namespace quirkpad
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
+            
+            styles.Comment = Styles.Gray;
+            styles.String = Styles.Purple;
+            styles.Number = Styles.Green;
+            styles.KeyWords = Styles.Orange;
+            styles.SpecialKeyWords = Styles.Brown;
+            styles.SpecialValues = Styles.Red;
+            styles.Letters = Styles.Blue;
         }
         
         private void InitStylesPriority()
         {           
             //add this style explicitly for drawing under other styles
-            fctb.AddStyle(SameWordsStyle);
+            fctb.AddStyle(Styles.SameWords);
         }
         
         private void fctb_TextChanged(object sender, TextChangedEventArgs e) {
-            switch (lang) {
-                case "JS":
-                    //For sample, we will highlight the syntax of C# manually, although could use built-in highlighter
-                    JSHighlight(e);//custom highlighting
-                    break;
-                default:
-                    break;//for highlighting of other languages, we using built-in FastColoredTextBox highlighter
-            }
+            Highlight(e);
+        }
 
-            if (fctb.Text.Trim().StartsWith("<?xml")) {
-                fctb.Language = Language.XML;
-
-                fctb.ClearStylesBuffer();
-                fctb.Range.ClearStyle(StyleIndex.All);
-                InitStylesPriority();
-                fctb.AutoIndentNeeded -= fctb_AutoIndentNeeded;
-
-                fctb.OnSyntaxHighlight(new TextChangedEventArgs(fctb.Range));
-            }
-        }   
-
-        private void JSHighlight(TextChangedEventArgs e) {
+        private void Highlight(TextChangedEventArgs e) {
             fctb.LeftBracket = '(';
             fctb.RightBracket = ')';
             fctb.LeftBracket2 = '{';
             fctb.RightBracket2 = '}';
             //clear style of changed range
-            e.ChangedRange.ClearStyle(BrownStyle, RedStyle, OrangeStyle, CyanStyle, GrayStyle, MagentaStyle, GreenStyle);
+            e.ChangedRange.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
 
             //comment highlighting
-            e.ChangedRange.SetStyle(GrayStyle, @"//.*$", RegexOptions.Multiline);
-            e.ChangedRange.SetStyle(GrayStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Multiline);
-            e.ChangedRange.SetStyle(GrayStyle, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
+            e.ChangedRange.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
+            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Multiline);
+            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
             //string highlighting
-            e.ChangedRange.SetStyle(MagentaStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            e.ChangedRange.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
             //number highlighting
-            e.ChangedRange.SetStyle(GreenStyle, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            e.ChangedRange.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
             //keywords
-            e.ChangedRange.SetStyle(OrangeStyle, @"\b(break|case|catch|class|const|continue|default|do|else|finally|for|function|goto|if|in|new|return|switch|this|throw|try|typeof|while|let|var|)\b");
+            e.ChangedRange.SetStyle(styles.KeyWords, keywords[0]);
             //get and set deserve their own
-            e.ChangedRange.SetStyle(BrownStyle, @"\b(get|set)\b");
+            e.ChangedRange.SetStyle(styles.SpecialKeyWords, keywords[1]);
             //special values, such as true, false, null, and undefined
-            e.ChangedRange.SetStyle(RedStyle, @"\b(true|false|null|undefined|Infinity|NaN|eval|prototype)\b");
+            e.ChangedRange.SetStyle(styles.SpecialValues, keywords[2]);
             //all other letters are blue
-            e.ChangedRange.SetStyle(CyanStyle, @"\w");
+            e.ChangedRange.SetStyle(styles.Letters, @"\w");
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -109,20 +90,6 @@ namespace quirkpad
             fctb.ShowReplaceDialog();
         }
 
-        private void collapseSelectedBlockToolStripMenuItem_Click(object sender, EventArgs e) {
-            fctb.CollapseBlock(fctb.Selection.Start.iLine, fctb.Selection.End.iLine);
-        }
-
-        private void exapndAllregionToolStripMenuItem_Click(object sender, EventArgs e) {
-            //this example shows how to expand all #region blocks (C#)
-            if (!lang.StartsWith("CSharp")) return;
-            for (int iLine = 0; iLine < fctb.LinesCount; iLine++)
-            {
-                if (fctb[iLine].FoldingStartMarker == @"#region\b")//marker @"#region\b" was used in SetFoldingMarkers()
-                    fctb.ExpandFoldedBlock(iLine);
-            }
-        }
-
         private void increaseIndentSiftTabToolStripMenuItem_Click(object sender, EventArgs e) {
             fctb.IncreaseIndent();
         }
@@ -131,34 +98,9 @@ namespace quirkpad
             fctb.DecreaseIndent();
         }
 
-        private void hTMLToolStripMenuItem1_Click(object sender, EventArgs e) {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "HTML with <PRE> tag|*.html|HTML without <PRE> tag|*.html";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                string html = "";
-
-                if (sfd.FilterIndex == 1)
-                {
-                    html = fctb.Html;
-                }
-                if (sfd.FilterIndex == 2)
-                {
-                    
-                    ExportToHTML exporter = new ExportToHTML();
-                    exporter.UseBr = true;
-                    exporter.UseNbsp = false;
-                    exporter.UseForwardNbsp = true;
-                    exporter.UseStyleTag = true;
-                    html = exporter.GetHtml(fctb);
-                }
-                File.WriteAllText(sfd.FileName, html);
-            }
-        }
-
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e)
         {
-            fctb.VisibleRange.ClearStyle(SameWordsStyle);
+            fctb.VisibleRange.ClearStyle(Styles.SameWords);
             if (!fctb.Selection.IsEmpty)
                 return;//user selected diapason
 
@@ -171,17 +113,7 @@ namespace quirkpad
             var ranges = fctb.VisibleRange.GetRanges("\\b" + text + "\\b").ToArray();
             if(ranges.Length>1)
             foreach(var r in ranges)
-                r.SetStyle(SameWordsStyle);
-        }
-
-        private void goForwardCtrlShiftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.NavigateForward();
-        }
-
-        private void goBackwardCtrlToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.NavigateBackward();
+                r.SetStyle(Styles.SameWords);
         }
 
         private void autoIndentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -239,16 +171,6 @@ namespace quirkpad
             tb.Invalidate();
         }
 
-        private void goLeftBracketToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GoLeftBracket(fctb, '{', '}');
-        }
-
-        private void goRightBracketToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GoRightBracket(fctb, '{', '}');
-        }
-
         private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args)
         {
             //block {}
@@ -261,7 +183,7 @@ namespace quirkpad
                 return;
             }
             //end of block {}
-            if (Regex.IsMatch(args.LineText, @"}[^""']*$"))
+            if (Regex.IsMatch(args.LineText, @"\}[^""']*$"))
             {
                 args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
@@ -289,52 +211,13 @@ namespace quirkpad
                 }
         }
 
-        Random rnd = new Random();
-
-        private void setSelectedAsReadonlyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.Selection.ReadOnly = true;
-        }
-
-        private void setSelectedAsWritableToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.Selection.ReadOnly = false;
-        }
-
-        private void changeHotkeysToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var form = new HotkeysEditorForm(fctb.HotkeysMapping);
-            if(form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fctb.HotkeysMapping = form.GetHotkeys();
-        }
-
-        private void rTFToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "RTF|*.rtf";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                string rtf = fctb.Rtf;
-                File.WriteAllText(sfd.FileName, rtf);
-            }
-        }
-
         private void fctb_CustomAction(object sender, CustomActionEventArgs e)
         {
             MessageBox.Show(e.Action.ToString());
         }
-
-        private void commentSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.InsertLinePrefix(fctb.CommentPrefix);
-        }
-
-        private void uncommentSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.RemoveLinePrefix(fctb.CommentPrefix);
-        }
         
-        //making a new file
+        
+        //saving a new file
         void NewFile() {
             fctb.Text = "";
             
