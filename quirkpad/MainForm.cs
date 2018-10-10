@@ -220,6 +220,7 @@ namespace quirkpad
         //saving a new file
         void NewFile() {
             fctb.Text = "";
+            filepath = "";
             
             statusLabel.Text = "Ready.";
         }
