@@ -220,6 +220,7 @@ namespace quirkpad
         //saving a new file
         void NewFile() {
             fctb.Text = "";
+            filePath = "";
             
             statusLabel.Text = "Ready.";
         }
@@ -249,14 +250,14 @@ namespace quirkpad
                 if (saveFileDialog.ShowDialog() == DialogResult.OK) {
                     filePath = saveFileDialog.FileName;
                 } else {
-                    statusLabel.Text = "Ready.";
+                    statusLabel.Text = "File not saved.";
                     return;
                 }
             }
             
             fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
             
-            statusLabel.Text = "Ready.";
+            statusLabel.Text = "File Saved.";
         }
         
         void SaveToolStripButtonClick(object sender, EventArgs e) {
