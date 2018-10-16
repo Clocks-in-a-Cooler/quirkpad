@@ -25,6 +25,7 @@ namespace quirkpad
         string filePath = "";
         Styles styles = new Styles();
         string[] keywords = OptionsReader.ReadOptions("options.txt");
+        bool saved = true;
         
         public MainForm()
         {
@@ -44,6 +45,8 @@ namespace quirkpad
             styles.SpecialKeyWords = Styles.Brown;
             styles.SpecialValues = Styles.Red;
             styles.Letters = Styles.Blue;
+            
+            saved = true;
         }
         
         private void InitStylesPriority()
@@ -53,6 +56,8 @@ namespace quirkpad
         }
         
         private void fctb_TextChanged(object sender, TextChangedEventArgs e) {
+            statusLabel.Text = "Ready.";
+            saved = false;
             Highlight(e);
         }
 
@@ -219,9 +224,14 @@ namespace quirkpad
         
         //saving a new file
         void NewFile() {
+            if (!saved) {
+                WarnSave();
+            }
+            
             fctb.Text = "";
             filePath = "";
             
+            this.saved = true;
             statusLabel.Text = "Ready.";
         }
         
@@ -230,11 +240,17 @@ namespace quirkpad
             statusLabel.Text = "Opening File...";
             openFileDialog.Filter = "Javascript files |*.js| All files |*.*";
             
+            if (!saved) {
+                WarnSave();
+            }
+            
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 filePath = openFileDialog.FileName;
                 //load the file
                 fctb.OpenFile(filePath, new System.Text.UTF8Encoding());
             }
+            
+            saved = true;
             
             statusLabel.Text = "Ready.";
         }
@@ -256,8 +272,21 @@ namespace quirkpad
             }
             
             fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
+            saved = true;
             
             statusLabel.Text = "File Saved.";
+        }
+        
+        void WarnSave() {
+            const string message = "Would you like to save your changes first?";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            const string caption = "Save file first?";
+            
+            DialogResult result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Question);
+            
+            if (result == System.Windows.Forms.DialogResult.Yes) {
+                SaveFile();
+            }
         }
         
         void SaveToolStripButtonClick(object sender, EventArgs e) {

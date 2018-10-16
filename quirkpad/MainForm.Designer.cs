@@ -122,7 +122,7 @@ namespace quirkpad
             this.fctb.ReservedCountOfLineNumberChars = 2;
             this.fctb.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.fctb.ServiceColors = null;
-            this.fctb.Size = new System.Drawing.Size(463, 357);
+            this.fctb.Size = new System.Drawing.Size(550, 482);
             this.fctb.TabIndex = 3;
             this.fctb.Zoom = 100;
             this.fctb.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.fctb_TextChanged);
@@ -133,9 +133,9 @@ namespace quirkpad
             // 
             // statusLabel
             // 
-            this.statusLabel.Location = new System.Drawing.Point(0, 406);
+            this.statusLabel.Location = new System.Drawing.Point(0, 531);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(463, 22);
+            this.statusLabel.Size = new System.Drawing.Size(550, 22);
             this.statusLabel.TabIndex = 4;
             this.statusLabel.Text = "Welcome to Quirkpad.";
             // 
@@ -148,7 +148,7 @@ namespace quirkpad
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(463, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(550, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -371,7 +371,7 @@ namespace quirkpad
             this.helpToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(463, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(550, 25);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -462,7 +462,7 @@ namespace quirkpad
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 428);
+            this.ClientSize = new System.Drawing.Size(550, 553);
             this.Controls.Add(this.fctb);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusLabel);
