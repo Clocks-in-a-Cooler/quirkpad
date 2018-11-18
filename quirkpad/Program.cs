@@ -24,7 +24,14 @@ namespace quirkpad
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            
+            MainForm form = new MainForm();
+            
+            if (System.IO.File.Exists(args[0])) {
+                form.OpenFile_(args[0]);
+            }
+            
+            Application.Run(form);
         }
         
     }

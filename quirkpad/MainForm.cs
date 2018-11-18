@@ -255,6 +255,15 @@ namespace quirkpad
             statusLabel.Text = "Ready.";
         }
         
+        public void OpenFile_(string path) {
+            filePath = path;
+            
+            //load
+            fctb.OpenFile(path, new System.Text.UTF8Encoding());
+            
+            statusLabel.Text = "File opened.";
+        }
+        
         //for saving files
         void SaveFile() {
             statusLabel.Text = "Saving...";
