@@ -231,6 +231,8 @@ namespace quirkpad
             fctb.Text = "";
             filePath = "";
             
+            this.Text = "New file - Quirkpad";
+            
             this.saved = true;
             statusLabel.Text = "Ready.";
         }
@@ -248,9 +250,9 @@ namespace quirkpad
                 filePath = openFileDialog.FileName;
                 //load the file
                 fctb.OpenFile(filePath, new System.Text.UTF8Encoding());
+                this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+                saved = true;
             }
-            
-            saved = true;
             
             statusLabel.Text = "Ready.";
         }
@@ -262,6 +264,7 @@ namespace quirkpad
             fctb.OpenFile(path, new System.Text.UTF8Encoding());
             
             statusLabel.Text = "File opened.";
+            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         //for saving files
@@ -284,6 +287,7 @@ namespace quirkpad
             saved = true;
             
             statusLabel.Text = "File Saved.";
+            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         void WarnSave() {
@@ -361,6 +365,12 @@ namespace quirkpad
         
         void PasteToolStripButtonClick(object sender, EventArgs e) {
             Paste();
+        }
+        
+        //about window opens
+        void AboutToolStripMenuItemClick(object sender, EventArgs e) {
+            HelpForm hf = new HelpForm();
+            hf.ShowDialog();
         }
     }
 }

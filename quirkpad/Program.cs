@@ -27,8 +27,10 @@ namespace quirkpad
             
             MainForm form = new MainForm();
             
-            if (System.IO.File.Exists(args[0])) {
-                form.OpenFile_(args[0]);
+            if (args.Length > 0) {
+                if (System.IO.File.Exists(args[0])) {
+                    form.OpenFile_(args[0]);
+                }
             }
             
             Application.Run(form);
