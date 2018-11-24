@@ -393,5 +393,9 @@ namespace quirkpad
         void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
             ShowOptionsDialog();
         }
+        
+        void SearchToolStripMenuItemClick(object sender, EventArgs e) {
+            fctb.ShowReplaceDialog();
+        }
     }
 }
