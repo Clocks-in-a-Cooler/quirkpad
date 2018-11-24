@@ -75,6 +75,5 @@ namespace quirkpad
             this.ResumeLayout(false);
 
         }
-        }
     }
 }

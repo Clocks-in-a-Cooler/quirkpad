@@ -372,5 +372,26 @@ namespace quirkpad
             HelpForm hf = new HelpForm();
             hf.ShowDialog();
         }
+        
+        void HelpToolStripButtonClick(object s, EventArgs e) {
+            this.AboutToolStripMenuItemClick(s, e);
+        }
+        
+        public System.Drawing.Font GetFont() {
+            return this.fctb.Font;
+        }
+        
+        public void SetFont(System.Drawing.Font f) {
+            this.fctb.Font = f;
+        }
+        
+        void ShowOptionsDialog() {
+            OptionsForm optfrm = new OptionsForm(this);
+            optfrm.ShowDialog();
+        }
+        
+        void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
+            ShowOptionsDialog();
+        }
     }
 }
