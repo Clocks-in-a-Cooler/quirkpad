@@ -24,7 +24,7 @@ namespace quirkpad
     {
         string filePath = "";
         Styles styles = new Styles();
-        string[] keywords = OptionsReader.ReadOptions("options.txt");
+        string[] keywords = OptionsReader.GetKeywords();
         bool saved = true;
         
         public MainForm()
@@ -37,6 +37,8 @@ namespace quirkpad
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
+            
+            fctb.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
             
             styles.Comment = Styles.Gray;
             styles.String = Styles.Purple;
@@ -231,6 +233,8 @@ namespace quirkpad
             fctb.Text = "";
             filePath = "";
             
+            this.Text = "New file - Quirkpad";
+            
             this.saved = true;
             statusLabel.Text = "Ready.";
         }
@@ -248,9 +252,9 @@ namespace quirkpad
                 filePath = openFileDialog.FileName;
                 //load the file
                 fctb.OpenFile(filePath, new System.Text.UTF8Encoding());
+                this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+                saved = true;
             }
-            
-            saved = true;
             
             statusLabel.Text = "Ready.";
         }
@@ -262,6 +266,7 @@ namespace quirkpad
             fctb.OpenFile(path, new System.Text.UTF8Encoding());
             
             statusLabel.Text = "File opened.";
+            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         //for saving files
@@ -284,6 +289,7 @@ namespace quirkpad
             saved = true;
             
             statusLabel.Text = "File Saved.";
+            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         void WarnSave() {
@@ -361,6 +367,37 @@ namespace quirkpad
         
         void PasteToolStripButtonClick(object sender, EventArgs e) {
             Paste();
+        }
+        
+        //about window opens
+        void AboutToolStripMenuItemClick(object sender, EventArgs e) {
+            HelpForm hf = new HelpForm();
+            hf.ShowDialog();
+        }
+        
+        void HelpToolStripButtonClick(object s, EventArgs e) {
+            this.AboutToolStripMenuItemClick(s, e);
+        }
+        
+        public System.Drawing.Font GetFont() {
+            return this.fctb.Font;
+        }
+        
+        public void SetFont(System.Drawing.Font f) {
+            this.fctb.Font = f;
+        }
+        
+        void ShowOptionsDialog() {
+            OptionsForm optfrm = new OptionsForm(this);
+            optfrm.ShowDialog();
+        }
+        
+        void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
+            ShowOptionsDialog();
+        }
+        
+        void SearchToolStripMenuItemClick(object sender, EventArgs e) {
+            fctb.ShowReplaceDialog();
         }
     }
 }
