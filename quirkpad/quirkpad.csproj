@@ -33,6 +33,7 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <StartAction>Project</StartAction>
+    <StartArguments>C:\javascript\game_jam_2018\js\engine.js</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastColoredTextBox">

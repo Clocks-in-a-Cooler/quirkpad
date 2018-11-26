@@ -24,7 +24,7 @@ namespace quirkpad
     {
         string filePath = "";
         Styles styles = new Styles();
-        string[] keywords = OptionsReader.ReadOptions("options.txt");
+        string[] keywords = OptionsReader.GetKeywords();
         bool saved = true;
         
         public MainForm()
@@ -37,6 +37,8 @@ namespace quirkpad
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
+            
+            fctb.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
             
             styles.Comment = Styles.Gray;
             styles.String = Styles.Purple;

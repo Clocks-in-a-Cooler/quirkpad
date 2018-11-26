@@ -24,6 +24,8 @@ namespace quirkpad {
             //
             InitializeComponent();
             
+            
+            
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
@@ -34,6 +36,8 @@ namespace quirkpad {
             
             if(fontDialog.ShowDialog() != DialogResult.Cancel ) {
                 mnfrm.SetFont(fontDialog.Font);
+                OptionsReader.SetFontOption(fontDialog.Font.FontFamily.Name);
+                OptionsReader.SetFontSize(fontDialog.Font.Size);
             }
         }
         void OkButtonClick(object sender, EventArgs e) {
