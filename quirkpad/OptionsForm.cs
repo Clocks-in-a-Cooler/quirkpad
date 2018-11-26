@@ -29,6 +29,9 @@ namespace quirkpad {
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
+            
+            fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+            fontLabel2.Text = OptionsReader.GetFontOption();
         }
         
         void ChooseFontClick(object sender, EventArgs e) {
@@ -38,6 +41,9 @@ namespace quirkpad {
                 mnfrm.SetFont(fontDialog.Font);
                 OptionsReader.SetFontOption(fontDialog.Font.FontFamily.Name);
                 OptionsReader.SetFontSize(fontDialog.Font.Size);
+                
+                fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+                fontLabel2.Text = OptionsReader.GetFontOption();
             }
         }
         void OkButtonClick(object sender, EventArgs e) {
