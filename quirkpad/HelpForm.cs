@@ -27,6 +27,8 @@ namespace quirkpad
             //
             // TODO: Add constructor code after the InitializeComponent() call.
             //
+            
+            pathLabel.Text = OptionsReader.GetOptionsFilePath();
         }
         
         void FCTBLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {

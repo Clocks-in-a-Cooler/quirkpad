@@ -27,6 +27,8 @@ namespace quirkpad
         string[] keywords = OptionsReader.GetKeywords();
         bool saved = true;
         
+        Font textFont = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+        
         public MainForm()
         {
             //
@@ -38,7 +40,7 @@ namespace quirkpad
             // TODO: Add constructor code after the InitializeComponent() call.
             //
             
-            fctb.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+            fctb.Font = textFont;
             
             styles.Comment = Styles.Gray;
             styles.String = Styles.Purple;
