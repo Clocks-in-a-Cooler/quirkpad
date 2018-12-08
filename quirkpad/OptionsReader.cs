@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System;
+using System.Windows.Forms;
 
 namespace quirkpad {
     public static class OptionsReader {
-        private static string OptionsFilePath = "quirkpad_settings.txt";
+        private static string OptionsFilePath = Application.StartupPath + "\\quirkpad_settings.txt";
         
         public static string[] GetKeywords() {
             string[] keywords = new string[3];
@@ -88,6 +89,11 @@ namespace quirkpad {
             
             index = -1;
             return false;
+        }
+        
+        //test method
+        public static string GetOptionsFilePath() {
+            return OptionsFilePath;
         }
         
         public static string[] ReadKeywords(string path) {

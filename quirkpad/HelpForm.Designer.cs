@@ -16,6 +16,8 @@ namespace quirkpad
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label AboutLabel;
         private System.Windows.Forms.LinkLabel FCTBLink;
+        private System.Windows.Forms.Label pathLabel;
+        private System.Windows.Forms.PictureBox pictureBox1;
         
         /// <summary>
         /// Disposes resources used by the form.
@@ -41,6 +43,9 @@ namespace quirkpad
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpForm));
             this.AboutLabel = new System.Windows.Forms.Label();
             this.FCTBLink = new System.Windows.Forms.LinkLabel();
+            this.pathLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // AboutLabel
@@ -62,16 +67,35 @@ namespace quirkpad
             this.FCTBLink.Text = "Fast Coloured Text Box.";
             this.FCTBLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FCTBLinkLinkClicked);
             // 
+            // pathLabel
+            // 
+            this.pathLabel.Location = new System.Drawing.Point(13, 102);
+            this.pathLabel.Name = "pathLabel";
+            this.pathLabel.Size = new System.Drawing.Size(295, 23);
+            this.pathLabel.TabIndex = 2;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(227, 13);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(65, 67);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
             // HelpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(232, 107);
+            this.ClientSize = new System.Drawing.Size(308, 140);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pathLabel);
             this.Controls.Add(this.FCTBLink);
             this.Controls.Add(this.AboutLabel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "HelpForm";
             this.Text = "About";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
