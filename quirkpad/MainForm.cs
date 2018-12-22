@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: cacan_000
  * Date: 2018/10/4
@@ -65,7 +65,7 @@ namespace quirkpad
             Highlight(e);
         }
 
-        private void Highlight(TextChangedEventArgs e) {
+        private void Highlight(TextChangedEventArgs e) {            
             fctb.LeftBracket = '(';
             fctb.RightBracket = ')';
             fctb.LeftBracket2 = '{';

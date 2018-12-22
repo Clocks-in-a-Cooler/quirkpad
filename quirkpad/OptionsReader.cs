@@ -23,6 +23,40 @@ namespace quirkpad {
             return keywords;
         }
         
+        public static string[] GetPlainKeywords() {
+            string[] keywords = new string[3];
+            int index = 0;
+            
+            if (GetLine("[keywords]", out index)) {
+                keywords[0] = File.ReadAllLines(OptionsFilePath)[index + 1];
+                keywords[1] = File.ReadAllLines(OptionsFilePath)[index + 2];
+                keywords[2] = File.ReadAllLines(OptionsFilePath)[index + 3];
+            } else {
+                keywords[0] = "";
+                keywords[1] = "";
+                keywords[2] = "";
+            }
+            
+            return keywords;
+        }
+        
+        public static void SetKeywords(string[] keywords) {
+            int index = 0;
+            
+            if (GetLine("[keywords]", out index)) {
+                string[] lines = File.ReadAllLines(OptionsFilePath);
+                
+                for (int i = 0; i < keywords.Length; i++) {
+                    lines[index + 1 + i] = keywords[i];
+                }
+                
+                File.WriteAllLines(OptionsFilePath, lines);
+            } else {
+                File.AppendAllLines(OptionsFilePath, new string[] {"[keywords]"});
+                File.AppendAllLines(OptionsFilePath, keywords);
+            }
+        }
+        
         public static string GetFontOption() {
             int index = 0;
             if (GetLine("[font]", out index)) {
@@ -94,43 +128,6 @@ namespace quirkpad {
         //test method
         public static string GetOptionsFilePath() {
             return OptionsFilePath;
-        }
-        
-        public static string[] ReadKeywords(string path) {
-            if (File.Exists(path)) {
-                //read the options
-                string[] vals = new string[3];
-                
-                vals[0] = @"\b(" + File.ReadAllLines(path)[0].Replace(" ", "|") + @")\b";
-                vals[1] = @"\b(" + File.ReadAllLines(path)[1].Replace(" ", "|") + @")\b";
-                vals[2] = @"\b(" + File.ReadAllLines(path)[2].Replace(" ", "|") + @")\b";
-                
-                return vals;
-            } else {
-                //default stuff
-                string[] ret = new string[] {
-                    //default keywords
-                    @"\b(int|double|float|bool|boolean|char|string|function|new|in|this|throw|String|if|else|while|do|for|switch|case|default|return|try|catch|finally|break|continue|using|import|#include|#define|#def|let|const|var|class|interface)\b",
-                    //default special ones
-                    @"\b(void|public|private|protected|sealed|abstract|virtual|get|set)\b",
-                    //some special values
-                    @"\b(true|false|undefined|null|NaN|prototype|super|base|Infinity)\b",
-                };
-                
-                return ret;
-            }
-        }
-        
-        public static string ReadFontOption(string path) {
-            if (File.Exists(path)) {
-                return File.ReadAllText(path);
-            } else {
-                return "Consolas";
-            }
-        }
-        
-        public static void SaveFontOption(string fontName, string path) {
-            File.WriteAllText(path, fontName);
         }
     }
 }

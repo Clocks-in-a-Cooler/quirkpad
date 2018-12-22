@@ -19,6 +19,9 @@ namespace quirkpad
         private System.Windows.Forms.Label fontLabel;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label fontLabel2;
+        private System.Windows.Forms.Label keywordLabel;
+        private System.Windows.Forms.RichTextBox keywordsBox;
+        private System.Windows.Forms.Label warningLabel;
         
         /// <summary>
         /// Disposes resources used by the form.
@@ -47,11 +50,14 @@ namespace quirkpad
             this.fontLabel = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.fontLabel2 = new System.Windows.Forms.Label();
+            this.keywordLabel = new System.Windows.Forms.Label();
+            this.keywordsBox = new System.Windows.Forms.RichTextBox();
+            this.warningLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chooseFont
             // 
-            this.chooseFont.Location = new System.Drawing.Point(197, 40);
+            this.chooseFont.Location = new System.Drawing.Point(197, 12);
             this.chooseFont.Name = "chooseFont";
             this.chooseFont.Size = new System.Drawing.Size(75, 23);
             this.chooseFont.TabIndex = 0;
@@ -61,7 +67,7 @@ namespace quirkpad
             // 
             // fontLabel
             // 
-            this.fontLabel.Location = new System.Drawing.Point(12, 40);
+            this.fontLabel.Location = new System.Drawing.Point(12, 9);
             this.fontLabel.Name = "fontLabel";
             this.fontLabel.Size = new System.Drawing.Size(57, 23);
             this.fontLabel.TabIndex = 1;
@@ -70,7 +76,7 @@ namespace quirkpad
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(197, 181);
+            this.okButton.Location = new System.Drawing.Point(197, 214);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 2;
@@ -80,22 +86,54 @@ namespace quirkpad
             // 
             // fontLabel2
             // 
-            this.fontLabel2.Location = new System.Drawing.Point(75, 40);
+            this.fontLabel2.Location = new System.Drawing.Point(75, 9);
             this.fontLabel2.Name = "fontLabel2";
             this.fontLabel2.Size = new System.Drawing.Size(100, 23);
             this.fontLabel2.TabIndex = 3;
             this.fontLabel2.Text = "label1";
             this.fontLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // keywordLabel
+            // 
+            this.keywordLabel.Location = new System.Drawing.Point(12, 32);
+            this.keywordLabel.Name = "keywordLabel";
+            this.keywordLabel.Size = new System.Drawing.Size(100, 23);
+            this.keywordLabel.TabIndex = 5;
+            this.keywordLabel.Text = "Keywords";
+            this.keywordLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // keywordsBox
+            // 
+            this.keywordsBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.keywordsBox.Location = new System.Drawing.Point(12, 58);
+            this.keywordsBox.Name = "keywordsBox";
+            this.keywordsBox.Size = new System.Drawing.Size(260, 116);
+            this.keywordsBox.TabIndex = 6;
+            this.keywordsBox.Text = "";
+            this.keywordsBox.WordWrap = false;
+            // 
+            // warningLabel
+            // 
+            this.warningLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.warningLabel.Location = new System.Drawing.Point(13, 181);
+            this.warningLabel.Name = "warningLabel";
+            this.warningLabel.Size = new System.Drawing.Size(259, 30);
+            this.warningLabel.TabIndex = 7;
+            this.warningLabel.Text = "* Changes will take effect after restarting Quirkpad. *";
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 216);
+            this.ClientSize = new System.Drawing.Size(284, 249);
+            this.Controls.Add(this.warningLabel);
+            this.Controls.Add(this.keywordsBox);
+            this.Controls.Add(this.keywordLabel);
             this.Controls.Add(this.fontLabel2);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.fontLabel);
             this.Controls.Add(this.chooseFont);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsForm";
             this.Text = "Quirkpad Options";
