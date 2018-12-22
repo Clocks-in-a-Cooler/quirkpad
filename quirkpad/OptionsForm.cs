@@ -32,12 +32,15 @@ namespace quirkpad {
             
             fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
             fontLabel2.Text = OptionsReader.GetFontOption();
+            
+            keywordsBox.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+            keywordsBox.Text = String.Join("\n", OptionsReader.GetPlainKeywords());
         }
         
         void ChooseFontClick(object sender, EventArgs e) {
             fontDialog.Font = mnfrm.GetFont();
             
-            if(fontDialog.ShowDialog() != DialogResult.Cancel ) {
+            if (fontDialog.ShowDialog() != DialogResult.Cancel ) {
                 mnfrm.SetFont(fontDialog.Font);
                 OptionsReader.SetFontOption(fontDialog.Font.FontFamily.Name);
                 OptionsReader.SetFontSize(fontDialog.Font.Size);
@@ -46,8 +49,11 @@ namespace quirkpad {
                 fontLabel2.Text = OptionsReader.GetFontOption();
             }
         }
+        
         void OkButtonClick(object sender, EventArgs e) {
-            this.Close();
+            OptionsReader.SetKeywords(keywordsBox.Text.Split('\n'));
+            
+            Close();
         }
     }
 }

@@ -50,11 +50,11 @@ namespace quirkpad
             // 
             // AboutLabel
             // 
-            this.AboutLabel.Location = new System.Drawing.Point(12, 9);
+            this.AboutLabel.Location = new System.Drawing.Point(13, 9);
             this.AboutLabel.Name = "AboutLabel";
             this.AboutLabel.Size = new System.Drawing.Size(208, 89);
             this.AboutLabel.TabIndex = 0;
-            this.AboutLabel.Text = "Quirkpad v0.6\r\nby Clocks-in-a-Cooler\r\n\r\nThis app is built with Pavel Torgashov\'s " +
+            this.AboutLabel.Text = "Quirkpad v0.7\r\nby Clocks-in-a-Cooler\r\n\r\nThis app is built with Pavel Torgashov\'s " +
     "FastColoredTextBox.";
             // 
             // FCTBLink
