@@ -203,8 +203,9 @@ namespace quirkpad
             this.Controls.Add(this.helpTab);
             this.Controls.Add(this.titleLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "InfoForm";
-            this.Text = "InfoForm";
+            this.Text = "Quirkpad Help";
             this.helpTab.ResumeLayout(false);
             this.basicTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
