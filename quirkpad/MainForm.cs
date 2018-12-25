@@ -7,7 +7,6 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using FastColoredTextBoxNS;
@@ -15,17 +14,18 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 
-namespace quirkpad
-{
+namespace quirkpad {
     /// <summary>
     /// Description of MainForm.
     /// </summary>
-    public partial class MainForm : Form
-    {
+    public partial class MainForm : Form {
+        
+        //a bunch of variables
         string filePath = "";
+        bool saved = true;
+        
         Styles styles = new Styles();
         string[] keywords = OptionsReader.GetKeywords();
-        bool saved = true;
         
         Font textFont = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
         
@@ -378,7 +378,7 @@ namespace quirkpad
         }
         
         void HelpToolStripButtonClick(object s, EventArgs e) {
-            this.AboutToolStripMenuItemClick(s, e);
+            new InfoForm().ShowDialog();
         }
         
         public System.Drawing.Font GetFont() {
@@ -397,9 +397,29 @@ namespace quirkpad
         void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
             ShowOptionsDialog();
         }
+        void SaveAsToolStripButtonClick(object sender, EventArgs e) {
+            filePath = "";
+            SaveFile();
+        }
         
-        void SearchToolStripMenuItemClick(object sender, EventArgs e) {
+        void FindToolStripMenuItemClick(object sender, EventArgs e) {
+            fctb.ShowFindDialog();
+        }
+        
+        void FindAndReplaceToolStripMenuItemClick(object sender, EventArgs e) {
             fctb.ShowReplaceDialog();
+        }
+        
+        void UndoToolStripMenuItemClick(object sender, EventArgs e) {
+            if (fctb.UndoEnabled) fctb.Undo();
+        }
+        
+        void RedoToolStripMenuItemClick(object sender, EventArgs e) {
+            if (fctb.RedoEnabled) fctb.Redo();
+        }
+        
+        void HelpToolStripMenuItem1Click(object sender, EventArgs e) {
+            new InfoForm().ShowDialog();
         }
     }
 }

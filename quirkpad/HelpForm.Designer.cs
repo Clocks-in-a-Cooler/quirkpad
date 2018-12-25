@@ -92,6 +92,7 @@ namespace quirkpad
             this.Controls.Add(this.pathLabel);
             this.Controls.Add(this.FCTBLink);
             this.Controls.Add(this.AboutLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "HelpForm";
             this.Text = "About";
