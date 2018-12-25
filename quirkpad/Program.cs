@@ -9,23 +9,24 @@
 using System;
 using System.Windows.Forms;
 
-namespace quirkpad
-{
+namespace quirkpad {
     /// <summary>
-    /// Class with program entry point.
+    /// static class with program entry point.
+    /// handles the program
     /// </summary>
-    internal sealed class Program
-    {
+    public sealed class Program {
+        
+        public static MainForm form;
+        
         /// <summary>
         /// Program entry point.
         /// </summary>
-        [STAThread]
-        public static void Main(string[] args)
-        {            
+        [STAThread]      
+        public static void Main(string[] args) {            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            MainForm form = new MainForm();
+            form = new MainForm();
             
             if (args.Length > 0) {
                 if (System.IO.File.Exists(args[0])) {
@@ -34,7 +35,6 @@ namespace quirkpad
             }
             
             Application.Run(form);
-        }
-        
+        }        
     }
 }
