@@ -22,7 +22,7 @@ namespace quirkpad {
         
         //a bunch of variables
         string filePath = "";
-        bool saved = true;
+        bool saved = false;
         
         Styles styles = new Styles();
         string[] keywords = OptionsReader.GetKeywords();
@@ -42,6 +42,7 @@ namespace quirkpad {
             
             fctb.Font = textFont;
             
+            styles.Links = Styles.LinkStyle;
             styles.Comment = Styles.Gray;
             styles.String = Styles.Purple;
             styles.Number = Styles.Green;
@@ -73,9 +74,11 @@ namespace quirkpad {
             //clear style of changed range
             e.ChangedRange.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
 
+            //hyperlink highlighting
+            e.ChangedRange.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
             //comment highlighting
             e.ChangedRange.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
-            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Multiline);
+            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
             e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
             //string highlighting
             e.ChangedRange.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
@@ -91,24 +94,7 @@ namespace quirkpad {
             e.ChangedRange.SetStyle(styles.Letters, @"\w");
         }
 
-        private void findToolStripMenuItem_Click(object sender, EventArgs e) {
-            fctb.ShowFindDialog();
-        }
-
-        private void replaceToolStripMenuItem_Click(object sender, EventArgs e) {
-            fctb.ShowReplaceDialog();
-        }
-
-        private void increaseIndentSiftTabToolStripMenuItem_Click(object sender, EventArgs e) {
-            fctb.IncreaseIndent();
-        }
-
-        private void decreaseIndentTabToolStripMenuItem_Click(object sender, EventArgs e) {
-            fctb.DecreaseIndent();
-        }
-
-        private void fctb_SelectionChangedDelayed(object sender, EventArgs e)
-        {
+        private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
             if (!fctb.Selection.IsEmpty)
                 return;//user selected diapason
@@ -125,24 +111,16 @@ namespace quirkpad {
                 r.SetStyle(Styles.SameWords);
         }
 
-        private void autoIndentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fctb.DoAutoIndent();
-        }
-
         const int maxBracketSearchIterations = 2000;
 
-        void GoLeftBracket(FastColoredTextBox tb, char leftBracket, char rightBracket)
-        {
+        void GoLeftBracket(FastColoredTextBox tb, char leftBracket, char rightBracket) {
             Range range = tb.Selection.Clone();//need to clone because we will move caret
             int counter = 0;
             int maxIterations = maxBracketSearchIterations;
-            while (range.GoLeftThroughFolded())//move caret left
-            {
+            while (range.GoLeftThroughFolded()) {//move caret left
                 if (range.CharAfterStart == leftBracket) counter++;
                 if (range.CharAfterStart == rightBracket) counter--;
-                if (counter == 1)
-                {
+                if (counter == 1) {
                     //found
                     tb.Selection.Start = range.Start;
                     tb.DoSelectionVisible();
@@ -155,17 +133,14 @@ namespace quirkpad {
             tb.Invalidate();
         }
 
-        void GoRightBracket(FastColoredTextBox tb, char leftBracket, char rightBracket)
-        {
+        void GoRightBracket(FastColoredTextBox tb, char leftBracket, char rightBracket) {
             var range = tb.Selection.Clone();//need clone because we will move caret
             int counter = 0;
             int maxIterations = maxBracketSearchIterations;
-            do
-            {
+            do {
                 if (range.CharAfterStart == leftBracket) counter++;
                 if (range.CharAfterStart == rightBracket) counter--;
-                if (counter == -1)
-                {
+                if (counter == -1) {
                     //found
                     tb.Selection.Start = range.Start;
                     tb.Selection.GoRightThroughFolded();
@@ -180,51 +155,43 @@ namespace quirkpad {
             tb.Invalidate();
         }
 
-        private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args)
-        {
+        private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args) {
             //block {}
             if (Regex.IsMatch(args.LineText, @"^[^""']*\{.*\}[^""']*$"))
                 return;
             //start of block {}
-            if (Regex.IsMatch(args.LineText, @"^[^""']*\{"))
-            {
+            if (Regex.IsMatch(args.LineText, @"^[^""']*\{")) {
                 args.ShiftNextLines = args.TabLength;
                 return;
             }
             //end of block {}
-            if (Regex.IsMatch(args.LineText, @"\}[^""']*$"))
-            {
+            if (Regex.IsMatch(args.LineText, @"\}[^""']*$")) {
                 args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
                 return;
             }
             //label
             if (Regex.IsMatch(args.LineText, @"^\s*\w+\s*:\s*($|//)") &&
-                !Regex.IsMatch(args.LineText, @"^\s*default\s*:"))
-            {
+                !Regex.IsMatch(args.LineText, @"^\s*default\s*:")) {
                 args.Shift = -args.TabLength;
                 return;
             }
             //some statements: case, default
-            if (Regex.IsMatch(args.LineText, @"^\s*(case|default)\b.*:\s*($|//)"))
-            {
+            if (Regex.IsMatch(args.LineText, @"^\s*(case|default)\b.*:\s*($|//)")) {
                 args.Shift = -args.TabLength / 2;
                 return;
             }
             //is unclosed operator in previous line ?
             if (Regex.IsMatch(args.PrevLineText, @"^\s*(if|for|foreach|while|[\}\s]*else)\b[^{]*$"))
-                if (!Regex.IsMatch(args.PrevLineText, @"(;\s*$)|(;\s*//)"))//operator is unclosed
-                {
+                if (!Regex.IsMatch(args.PrevLineText, @"(;\s*$)|(;\s*//)")) {//operator is unclosed
                     args.Shift = args.TabLength;
                     return;
                 }
         }
 
-        private void fctb_CustomAction(object sender, CustomActionEventArgs e)
-        {
+        private void fctb_CustomAction(object sender, CustomActionEventArgs e) {
             MessageBox.Show(e.Action.ToString());
         }
-        
         
         //saving a new file
         void NewFile() {
@@ -235,9 +202,9 @@ namespace quirkpad {
             fctb.Text = "";
             filePath = "";
             
-            this.Text = "New file - Quirkpad";
+            Text = "New file - Quirkpad";
             
-            this.saved = true;
+            saved = true;
             statusLabel.Text = "Ready.";
         }
         
@@ -254,7 +221,7 @@ namespace quirkpad {
                 filePath = openFileDialog.FileName;
                 //load the file
                 fctb.OpenFile(filePath, new System.Text.UTF8Encoding());
-                this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+                Text = Path.GetFileName(filePath) + " - Quirkpad";
                 saved = true;
             }
             
@@ -268,7 +235,8 @@ namespace quirkpad {
             fctb.OpenFile(path, new System.Text.UTF8Encoding());
             
             statusLabel.Text = "File opened.";
-            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+            saved = true;
+            Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         //for saving files
@@ -381,11 +349,11 @@ namespace quirkpad {
             new InfoForm().ShowDialog();
         }
         
-        public System.Drawing.Font GetFont() {
+        public Font GetFont() {
             return this.fctb.Font;
         }
         
-        public void SetFont(System.Drawing.Font f) {
+        public void SetFont(Font f) {
             this.fctb.Font = f;
         }
         
@@ -420,6 +388,18 @@ namespace quirkpad {
         
         void HelpToolStripMenuItem1Click(object sender, EventArgs e) {
             new InfoForm().ShowDialog();
+        }
+        
+        void UndoToolStripButtonClick(object sender, EventArgs e) {
+            if (fctb.UndoEnabled) fctb.Undo();
+        }
+        
+        void RedoToolStripButtonClick(object sender, EventArgs e) {
+            if (fctb.RedoEnabled) fctb.Redo();
+        }
+        
+        void SelectAllToolStripMenuItemClick(object sender, EventArgs e) {
+            fctb.SelectAll();
         }
     }
 }
