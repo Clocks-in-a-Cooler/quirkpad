@@ -54,8 +54,8 @@ namespace quirkpad
             this.AboutLabel.Name = "AboutLabel";
             this.AboutLabel.Size = new System.Drawing.Size(208, 89);
             this.AboutLabel.TabIndex = 0;
-            this.AboutLabel.Text = "Quirkpad v0.8\r\nby Clocks-in-a-Cooler\r\n\r\nThis app is built with Pavel Torgashov\'s " +
-    "FastColoredTextBox.";
+            this.AboutLabel.Text = "Quirkpad v0.8.1\r\nby Clocks-in-a-Cooler\r\n\r\nThis app is built with Pavel Torgashov\'" +
+    "s FastColoredTextBox.";
             // 
             // FCTBLink
             // 
