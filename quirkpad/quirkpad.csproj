@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastColoredTextBox">
-      <HintPath>..\..\FastColoredTextBox-master\Binary\FastColoredTextBox.dll</HintPath>
+      <HintPath>..\packages\FCTB.2.16.24\lib\FastColoredTextBox.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HelpForm.resx">

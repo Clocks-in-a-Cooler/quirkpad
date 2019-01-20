@@ -54,8 +54,7 @@ namespace quirkpad {
             saved = true;
         }
         
-        private void InitStylesPriority()
-        {           
+        private void InitStylesPriority() {           
             //add this style explicitly for drawing under other styles
             fctb.AddStyle(Styles.SameWords);
         }

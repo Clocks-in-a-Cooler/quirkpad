@@ -4,16 +4,18 @@ using System.Windows.Forms;
 
 namespace quirkpad {
     public static class OptionsReader {
-        private static string OptionsFilePath = Application.StartupPath + "\\quirkpad_settings.txt";
+        private static readonly string OptionsFilePath = Application.StartupPath + "\\quirkpad_settings.txt";
         
         public static string[] GetKeywords() {
             string[] keywords = new string[3];
             int index = 0;
             
             if (GetLine("[keywords]", out index)) {
-                keywords[0] = @"\b(" + File.ReadAllLines(OptionsFilePath)[index + 1].Replace(" ", "|") + @")\b";
-                keywords[1] = @"\b(" + File.ReadAllLines(OptionsFilePath)[index + 2].Replace(" ", "|") + @")\b";
-                keywords[2] = @"\b(" + File.ReadAllLines(OptionsFilePath)[index + 3].Replace(" ", "|") + @")\b";
+                keywords = GetPlainKeywords();
+                
+                keywords[0] = @"\b(" + keywords[0].Replace(" ", "|") + @")\b";
+                keywords[1] = @"\b(" + keywords[1].Replace(" ", "|") + @")\b";
+                keywords[2] = @"\b(" + keywords[2].Replace(" ", "|") + @")\b";
             } else {
                 keywords[0] = @"\b(int|double|float|bool|boolean|char|string|function|new|in|this|throw|String|if|else|while|do|for|switch|case|default|return|try|catch|finally|break|continue|using|import|#include|#define|#def|let|const|var|class|interface)\b";
                 keywords[1] = @"\b(void|public|private|protected|sealed|abstract|virtual|get|set)\b";
