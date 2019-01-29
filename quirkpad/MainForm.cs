@@ -51,6 +51,8 @@ namespace quirkpad {
             styles.SpecialValues = Styles.Red;
             styles.Letters = Styles.Blue;
             
+            fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
+            
             saved = true;
         }
         
@@ -62,7 +64,8 @@ namespace quirkpad {
         private void fctb_TextChanged(object sender, TextChangedEventArgs e) {
             statusLabel.Text = "Ready.";
             saved = false;
-            Highlight(e);
+            
+            //Highlight(e);
         }
 
         private void Highlight(TextChangedEventArgs e) {            
@@ -92,6 +95,17 @@ namespace quirkpad {
             //all other letters are blue
             e.ChangedRange.SetStyle(styles.Letters, @"\w");
         }
+        
+//        private void HightlightMultilineComments() {
+//            var range = fctb.GetRanges(@"//.*$", RegexOptions.Multiline);
+//            
+//            foreach (Range r in range) {
+//                r.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
+//                r.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
+//                r.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+//                r.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
+//            }
+//        }
 
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);

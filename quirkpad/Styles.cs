@@ -5,7 +5,7 @@ namespace quirkpad {
     public class Styles {
         //various styles
         public static TextStyle Brown = new TextStyle(Brushes.Chocolate, null, FontStyle.Regular);
-        public static TextStyle Blue = new TextStyle(Brushes.DodgerBlue, null, FontStyle.Regular);
+        public static TextStyle Blue = new TextStyle(new SolidBrush(Color.DodgerBlue), null, FontStyle.Regular);
         public static TextStyle Red = new TextStyle(Brushes.Red, null, FontStyle.Regular);
         public static TextStyle Orange = new TextStyle(Brushes.DarkOrange, null, FontStyle.Regular);
         public static TextStyle Gray = new TextStyle(Brushes.LightSlateGray, null, FontStyle.Regular);

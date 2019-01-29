@@ -109,6 +109,48 @@ namespace quirkpad {
                 File.AppendAllLines(OptionsFilePath, newLines);
             }
         }
+        /*
+        public static Theme GetTheme() {
+            int index = 0;
+            
+            
+            if (GetLine("[theme]", out index)) {
+                string themeName = File.ReadAllLines(OptionsFilePath)[index + 1];
+                
+                switch (condition) {
+                    //finish
+                }
+            } else {
+                return Themes.Default;
+            }
+        }*/
+        
+        public static void SetTheme() {
+            
+        }
+        
+        /*
+        public static Styles GetColours() {
+            int index = 0;
+            
+            /*
+             colour settings are as follows:
+             
+             [colours]
+             (comments colour)
+             (string colour)
+             (number colour)
+             (keywords colour)
+             (special keywords colour)
+             (special values colour)
+             (ordinary letters colour)
+             (everything else colour)
+             
+             if a colour is missing or invalid, it defaults to black
+           *
+            
+        }
+        */
         
         //internal method
         static bool GetLine(string match, out int index) {
