@@ -13,11 +13,15 @@ namespace quirkpad {
         public static TextStyle Green = new TextStyle(Brushes.LimeGreen, null, FontStyle.Regular);
         public static TextStyle Black = new TextStyle(Brushes.Black, null, FontStyle.Regular);
         public static TextStyle Yellow = new TextStyle(Brushes.Yellow, null, FontStyle.Regular);
-        public static TextStyle White = new TextStyle(Brushes.White, null, FontStyle.Regular);
+        public static TextStyle White = new TextStyle(Brushes.White, null, FontStyle.Regular);      
         
         public static TextStyle LinkStyle = new TextStyle(Brushes.Red, null, FontStyle.Underline);
         
         public static MarkerStyle SameWords = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.LightSlateGray)));
+        
+        public static TextStyle[] AllStyles = {
+            Red, Orange, Yellow, Green, Blue, Purple, Gray, Brown, White, Black, LinkStyle
+        };
         
         //more styles
         public TextStyle Links;

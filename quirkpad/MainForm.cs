@@ -23,6 +23,7 @@ namespace quirkpad {
         //a bunch of variables
         string filePath = "";
         bool saved = false;
+        string lang = ".txt";
         
         Styles styles = new Styles();
         string[] keywords = OptionsReader.GetKeywords();
@@ -56,6 +57,7 @@ namespace quirkpad {
             saved = true;
         }
         
+        #region code        
         private void InitStylesPriority() {           
             //add this style explicitly for drawing under other styles
             fctb.AddStyle(Styles.SameWords);
@@ -74,38 +76,27 @@ namespace quirkpad {
             fctb.LeftBracket2 = '{';
             fctb.RightBracket2 = '}';
             //clear style of changed range
-            e.ChangedRange.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
+            fctb.Range.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
 
             //hyperlink highlighting
-            e.ChangedRange.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            fctb.Range.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
             //comment highlighting
-            e.ChangedRange.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
-            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            e.ChangedRange.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
+            fctb.Range.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
+            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
             //string highlighting
-            e.ChangedRange.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            fctb.Range.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
             //number highlighting
-            e.ChangedRange.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            fctb.Range.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
             //keywords
-            e.ChangedRange.SetStyle(styles.KeyWords, keywords[0]);
+            fctb.Range.SetStyle(styles.KeyWords, keywords[0]);
             //get and set deserve their own
-            e.ChangedRange.SetStyle(styles.SpecialKeyWords, keywords[1]);
+            fctb.Range.SetStyle(styles.SpecialKeyWords, keywords[1]);
             //special values, such as true, false, null, and undefined
-            e.ChangedRange.SetStyle(styles.SpecialValues, keywords[2]);
+            fctb.Range.SetStyle(styles.SpecialValues, keywords[2]);
             //all other letters are blue
-            e.ChangedRange.SetStyle(styles.Letters, @"\w");
+            fctb.Range.SetStyle(styles.Letters, @"\w");
         }
-        
-//        private void HightlightMultilineComments() {
-//            var range = fctb.GetRanges(@"//.*$", RegexOptions.Multiline);
-//            
-//            foreach (Range r in range) {
-//                r.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
-//                r.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
-//                r.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-//                r.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
-//            }
-//        }
 
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
@@ -175,6 +166,7 @@ namespace quirkpad {
             //start of block {}
             if (Regex.IsMatch(args.LineText, @"^[^""']*\{")) {
                 args.ShiftNextLines = args.TabLength;
+                //fctb.InsertText("}");
                 return;
             }
             //end of block {}
@@ -205,7 +197,8 @@ namespace quirkpad {
         private void fctb_CustomAction(object sender, CustomActionEventArgs e) {
             MessageBox.Show(e.Action.ToString());
         }
-        
+        #endregion
+        #region new, open, save, save as
         //saving a new file
         void NewFile() {
             if (!saved) {
@@ -214,6 +207,7 @@ namespace quirkpad {
             
             fctb.Text = "";
             filePath = "";
+            lang = ".txt"; //default language: text
             
             Text = "New file - Quirkpad";
             
@@ -224,7 +218,7 @@ namespace quirkpad {
         //opening a file
         void OpenFile() {
             statusLabel.Text = "Opening File...";
-            openFileDialog.Filter = "Javascript files |*.js| All files |*.*";
+            openFileDialog.Filter = "All files|*.*";
             
             if (!saved) {
                 WarnSave();
@@ -248,8 +242,9 @@ namespace quirkpad {
             fctb.OpenFile(path, new System.Text.UTF8Encoding());
             
             statusLabel.Text = "File opened.";
+            lang = Path.GetExtension(filePath);
             saved = true;
-            Text = Path.GetFileName(filePath) + " - Quirkpad";
+            this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
         
         //for saving files
@@ -258,7 +253,7 @@ namespace quirkpad {
             
             //test if a file path exists
             if (filePath == "") {
-                saveFileDialog.Filter = "Javascript files |*.js| All files | *.*";
+                saveFileDialog.Filter = "Source code files |*" + lang + "| All files | *.*";
             
                 if (saveFileDialog.ShowDialog() == DialogResult.OK) {
                     filePath = saveFileDialog.FileName;
@@ -278,7 +273,7 @@ namespace quirkpad {
         void WarnSave() {
             const string message = "Would you like to save your changes first?";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            const string caption = "Save file first?";
+            const string caption = "Save your changes first?";
             
             DialogResult result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Question);
             
@@ -287,6 +282,38 @@ namespace quirkpad {
             }
         }
         
+        void SaveAs() {
+            //a bit more involved. can't reuse SaveFile().
+            statusLabel.Text = "Saving file...";
+            saveFileDialog.Filter = "Source code files |*" + lang + "| All Files |*.*";
+            
+            DialogResult result = saveFileDialog.ShowDialog();
+            
+            if (result == DialogResult.OK) {
+                filePath = saveFileDialog.FileName;
+                saved = true;
+                fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
+                statusLabel.Text = "File saved.";
+                this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+            } else if (result == DialogResult.Cancel || result == DialogResult.Abort) {
+                statusLabel.Text = "File not saved at a new location.";
+            }
+        }
+        #endregion
+        #region copy, past, and cut
+        void Paste() {
+            fctb.Paste();
+        }
+        
+        void Cut() {
+            fctb.Cut();
+        }
+        
+        void Copy() {
+            fctb.Copy();
+        }
+        #endregion
+        #region event listeners
         void SaveToolStripButtonClick(object sender, EventArgs e) {
             SaveFile();
         }
@@ -298,8 +325,7 @@ namespace quirkpad {
             OpenFile();
         }
         void SaveAsToolStripMenuItemClick(object sender, EventArgs e) {
-            filePath = "";
-            SaveFile();
+            SaveAs();
         }
         void NewToolStripMenuItemClick(object sender, EventArgs e) {
             NewFile();
@@ -315,18 +341,6 @@ namespace quirkpad {
         }
         
         void FctbLoad(object sender, EventArgs e) { }
-        
-        void Paste() {
-            fctb.Paste();
-        }
-        
-        void Cut() {
-            fctb.Cut();
-        }
-        
-        void Copy() {
-            fctb.Copy();
-        }
         
         void CutToolStripMenuItemClick(object sender, EventArgs e) {
             Cut();
@@ -361,13 +375,14 @@ namespace quirkpad {
         void HelpToolStripButtonClick(object s, EventArgs e) {
             new InfoForm().ShowDialog();
         }
+        #endregion
         
         public Font GetFont() {
-            return this.fctb.Font;
+            return fctb.Font;
         }
         
         public void SetFont(Font f) {
-            this.fctb.Font = f;
+            fctb.Font = f;
         }
         
         void ShowOptionsDialog() {
@@ -378,9 +393,9 @@ namespace quirkpad {
         void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
             ShowOptionsDialog();
         }
+        
         void SaveAsToolStripButtonClick(object sender, EventArgs e) {
-            filePath = "";
-            SaveFile();
+            SaveAs();
         }
         
         void FindToolStripMenuItemClick(object sender, EventArgs e) {

@@ -13,15 +13,15 @@ namespace quirkpad {
     /// <summary>
     /// static class with program entry point.
     /// handles the program
+    /// has static variables that are crucial to the entire program
     /// </summary>
-    public sealed class Program {
-        
+    public class Quirkpad {
         public static MainForm form;
         
         /// <summary>
         /// Program entry point.
         /// </summary>
-        [STAThread]      
+        [STAThread]
         public static void Main(string[] args) {            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

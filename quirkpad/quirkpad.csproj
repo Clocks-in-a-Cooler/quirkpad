@@ -33,7 +33,6 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <StartAction>Project</StartAction>
-    <StartArguments>C:\javascript\game_jam_2018\js\engine.js</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastColoredTextBox">
@@ -61,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileHandler.cs" />
     <Compile Include="HelpForm.cs" />
     <Compile Include="HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
@@ -79,11 +79,9 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="OptionsReader.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Quirkpad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Styles.cs" />
-    <Compile Include="Theme.cs" />
-    <Compile Include="Themes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
