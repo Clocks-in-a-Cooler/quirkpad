@@ -130,12 +130,7 @@ namespace quirkpad {
             foreach(Range ra in r.GetRanges(@"</?\b\w+?\b")) {
                 ra.SetStyle(Styles.DarkGreen, @"\w");
             }
-            
-            //attributes
-            //foreach(Range ra in r.GetRanges(@"\b(\w+-?)+?=\b")) {
-            //    ra.SetStyle(Styles.Green, @"\w");
-            //}
-            
+                        
             //the links!
             r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
             
@@ -145,16 +140,23 @@ namespace quirkpad {
             //escape characters
             r.SetStyle(Styles.Crimson, @"&\w+?;");
             
+            //attributes
+            r.SetStyle(Styles.Blue, @"\w+\-?");
+            
             //get all the css
-            foreach (Range ra in r.GetRanges(@"<style [^>]*>(\n|.)*?</style>", RegexOptions.Multiline)) {
-                H_CSS(ra); //highlight each range
+            foreach (Range ra in r.GetRanges(@"<style[^>]*>.*?</style>", RegexOptions.Singleline)) {
+                foreach (Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
+                    H_CSS(range); //i've deliberately used the greedy operator
+                }
             }
             
             //gets all of the javascript
-            foreach (Range ra in r.GetRanges(@"<script [^>]*>(.*?)</script>", RegexOptions.Multiline)) {
-                H_Javascript(ra); //hightlight each range
+            foreach (Range ra in r.GetRanges(@"<script[^>]*>.*?</script>", RegexOptions.Singleline)) {
+                foreach(Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
+                    H_Javascript(range); //there should only be one, anyway
+                }
             }
-            
+                        
             //finish this
         }
         
@@ -178,11 +180,12 @@ namespace quirkpad {
             
             //types
             r.SetStyle(Styles.Green, @"\b(boolean|byte|char|double|enum|float|int|long|module|short|void)\b");
-            //  foreach (Range found in r.GetRanges(@"\b[A-Z]\w*?\b")) { //matches anything beginning with a capital letter, good chance it's a class or type
-            //      r.SetStyle(Styles.Green, @"\b" + found.Text + @"\b");
-            //  }
-
             r.SetStyle(Styles.Green, @"\b[A-Z]\w*?\b");
+            
+            //methods, which are always followed by an opening parenthesis--such as "foo("
+            foreach(Range ra in r.GetRanges(@"\b\w+?\b\(")) {
+                ra.SetStyle(Styles.DarkGreen, @"\w");
+            }
             
             //special words
             r.SetStyle(Styles.Brown, @"\b(package|import)\b");
@@ -193,7 +196,7 @@ namespace quirkpad {
             //special values
             r.SetStyle(Styles.Purple, @"\b(true|false|undefined|null)\b");
             
-            //the rest in dark yellow
+            //the rest in dark cyan
             r.SetStyle(Styles.DarkCyan, @"\w");
         }
         
@@ -233,17 +236,6 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //to be finished.
-        }
-
-        /// <summary>
-        /// highlights the range in VB.
-        /// </summary>
-        /// <param name="r">the range to highlight</param>
-        static void H_VB(Range r) {
-            r.ClearStyle(Styles.AllStyles);
-            
-            //comments
-            
         }
         
         /// <summary>
@@ -287,6 +279,17 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //finish this
+        }
+
+        /// <summary>
+        /// highlights the range in VB.
+        /// </summary>
+        /// <param name="r">the range to highlight</param>
+        static void H_VB(Range r) {
+            r.ClearStyle(Styles.AllStyles);
+            
+            //comments
+            
         }
         
         //
