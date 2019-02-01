@@ -42,16 +42,7 @@ namespace quirkpad {
             //
             
             fctb.Font = textFont;
-            
-            styles.Links = Styles.LinkStyle;
-            styles.Comment = Styles.Gray;
-            styles.String = Styles.Purple;
-            styles.Number = Styles.Green;
-            styles.KeyWords = Styles.Orange;
-            styles.SpecialKeyWords = Styles.Brown;
-            styles.SpecialValues = Styles.Red;
-            styles.Letters = Styles.Blue;
-            
+                        
             fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
             
             saved = true;
@@ -66,37 +57,38 @@ namespace quirkpad {
         private void fctb_TextChanged(object sender, TextChangedEventArgs e) {
             statusLabel.Text = "Ready.";
             saved = false;
-            
-            //Highlight(e);
+
+            Highlighter.Highlight(fctb.Range, lang);
         }
 
-        private void Highlight(TextChangedEventArgs e) {            
-            fctb.LeftBracket = '(';
-            fctb.RightBracket = ')';
-            fctb.LeftBracket2 = '{';
-            fctb.RightBracket2 = '}';
-            //clear style of changed range
-            fctb.Range.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
-
-            //hyperlink highlighting
-            fctb.Range.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
-            //comment highlighting
-            fctb.Range.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
-            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
-            //string highlighting
-            fctb.Range.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
-            //number highlighting
-            fctb.Range.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
-            //keywords
-            fctb.Range.SetStyle(styles.KeyWords, keywords[0]);
-            //get and set deserve their own
-            fctb.Range.SetStyle(styles.SpecialKeyWords, keywords[1]);
-            //special values, such as true, false, null, and undefined
-            fctb.Range.SetStyle(styles.SpecialValues, keywords[2]);
-            //all other letters are blue
-            fctb.Range.SetStyle(styles.Letters, @"\w");
-        }
+        
+//        private void Highlight(TextChangedEventArgs e) {            
+//            fctb.LeftBracket = '(';
+//            fctb.RightBracket = ')';
+//            fctb.LeftBracket2 = '{';
+//            fctb.RightBracket2 = '}';
+//            //clear style of changed range
+//            fctb.Range.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
+//
+//            //hyperlink highlighting
+//            fctb.Range.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+//            //comment highlighting
+//            fctb.Range.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
+//            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+//            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
+//            //string highlighting
+//            fctb.Range.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+//            //number highlighting
+//            fctb.Range.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+//            //keywords
+//            fctb.Range.SetStyle(styles.KeyWords, keywords[0]);
+//            //get and set deserve their own
+//            fctb.Range.SetStyle(styles.SpecialKeyWords, keywords[1]);
+//            //special values, such as true, false, null, and undefined
+//            fctb.Range.SetStyle(styles.SpecialValues, keywords[2]);
+//            //all other letters are blue
+//            fctb.Range.SetStyle(styles.Letters, @"\w");
+//        }
 
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
@@ -226,10 +218,15 @@ namespace quirkpad {
             
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 filePath = openFileDialog.FileName;
+                
+                //update the language
+                lang = Path.GetExtension(filePath);
+                
                 //load the file
                 fctb.OpenFile(filePath, new System.Text.UTF8Encoding());
                 Text = Path.GetFileName(filePath) + " - Quirkpad";
                 saved = true;
+                
             }
             
             statusLabel.Text = "Ready.";
@@ -238,11 +235,12 @@ namespace quirkpad {
         public void OpenFile_(string path) {
             filePath = path;
             
+            lang = Path.GetExtension(filePath);
+            
             //load
             fctb.OpenFile(path, new System.Text.UTF8Encoding());
             
             statusLabel.Text = "File opened.";
-            lang = Path.GetExtension(filePath);
             saved = true;
             this.Text = Path.GetFileName(filePath) + " - Quirkpad";
         }
@@ -262,6 +260,8 @@ namespace quirkpad {
                     return;
                 }
             }
+            
+            lang = Path.GetExtension(filePath);
             
             fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
             saved = true;
@@ -291,6 +291,10 @@ namespace quirkpad {
             
             if (result == DialogResult.OK) {
                 filePath = saveFileDialog.FileName;
+                
+                //update the language first.
+                lang = Path.GetExtension(filePath);
+                
                 saved = true;
                 fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
                 statusLabel.Text = "File saved.";
