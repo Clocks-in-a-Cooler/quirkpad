@@ -1,4 +1,4 @@
-﻿using FastColoredTextBoxNS;
+using FastColoredTextBoxNS;
 using System.Text.RegularExpressions;
 using System.Linq;
 
@@ -17,6 +17,9 @@ namespace quirkpad {
         public static void Highlight(Range r, string ext) {
             switch (ext.ToLower()) {
                 //identify each language based on the file extension
+                case ".cs":
+                    H_CSharp(r);
+                    break;
                 case ".css":
                     H_CSS(r);
                     break;
@@ -25,18 +28,35 @@ namespace quirkpad {
                     H_HTML(r);
                     break;
                 case ".java":
-                    H_JAVA(r);
+                    H_Java(r);
                     break;
                 case ".js":
-                    H_JS(r);
+                    H_Javascript(r);
                     break;
                 case ".json":
                     H_JSON(r);
+                    break;
+                case ".md":
+                case ".markdown":
+                    H_Markdown(r);
+                    break;
+                case ".py":
+                    H_Python(r);
                     break;
             }
         }
         
         //languages are arranged in alphabetical order
+        
+        /// <summary>
+        /// highlights the given range according to c# syntax
+        /// </summary>
+        /// <param name="r">the range to highlight</param>
+        static void H_CSharp(Range r) {
+            r.ClearStyle(Styles.AllStyles);
+            
+            //finish this
+        }
         
         /// <summary>
         /// highlights the given range in css
@@ -100,30 +120,55 @@ namespace quirkpad {
         static void H_HTML(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
+            //comments first!
+            r.SetStyle(Styles.Gray, @"<!--(\n|.)*?-->", RegexOptions.Multiline);
+            
+            //the <!DOCTYPE> tag at the top
+            r.SetStyle(Styles.Yellow, @"<!DOCTYPE\s\w*?>");
+            
+            //tags
+            foreach(Range ra in r.GetRanges(@"</?\b\w+?\b")) {
+                ra.SetStyle(Styles.DarkGreen, @"\w");
+            }
+            
+            //attributes
+            //foreach(Range ra in r.GetRanges(@"\b(\w+-?)+?=\b")) {
+            //    ra.SetStyle(Styles.Green, @"\w");
+            //}
+            
+            //the links!
+            r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            
+            //strings
+            r.SetStyle(Styles.DarkCyan, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            
+            //escape characters
+            r.SetStyle(Styles.Crimson, @"&\w+?;");
+            
             //get all the css
-            Range[] cssRanges = r.GetRanges(@"<style [^>]*>(.*?)</style>", RegexOptions.Multiline).ToArray();
-            foreach (Range ra in cssRanges) {
+            foreach (Range ra in r.GetRanges(@"<style [^>]*>(\n|.)*?</style>", RegexOptions.Multiline)) {
                 H_CSS(ra); //highlight each range
             }
             
             //gets all of the javascript
-            Range[] jsRanges  = r.GetRanges(@"<script [^>]*>(.*?)</script>", RegexOptions.Multiline).ToArray();
-            foreach (Range ra in jsRanges) {
-                H_JS(ra); //hightlight each range
+            foreach (Range ra in r.GetRanges(@"<script [^>]*>(.*?)</script>", RegexOptions.Multiline)) {
+                H_Javascript(ra); //hightlight each range
             }
+            
+            //finish this
         }
         
         /// <summary>
         /// highlights the given range according to Java syntax
         /// </summary>
         /// <param name="r"></param>
-        public static void H_JAVA(Range r) {
+        public static void H_Java(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
             r.SetStyle(Styles.Gray, @"//.*$", RegexOptions.Multiline);
             r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
             
             //strings
             r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
@@ -133,9 +178,9 @@ namespace quirkpad {
             
             //types
             r.SetStyle(Styles.Green, @"\b(boolean|byte|char|double|enum|float|int|long|module|short|void)\b");
-//            foreach (Range found in r.GetRanges(@"\b[A-Z]\w*?\b")) { //matches anything beginning with a capital letter, good chance it's a class or type
-//                r.SetStyle(Styles.Green, @"\b" + found.Text + @"\b");
-//            }
+            //  foreach (Range found in r.GetRanges(@"\b[A-Z]\w*?\b")) { //matches anything beginning with a capital letter, good chance it's a class or type
+            //      r.SetStyle(Styles.Green, @"\b" + found.Text + @"\b");
+            //  }
 
             r.SetStyle(Styles.Green, @"\b[A-Z]\w*?\b");
             
@@ -156,7 +201,7 @@ namespace quirkpad {
         /// highlights the given range according to Javascript syntax
         /// </summary>
         /// <param name="r">the range to highlight</param>
-        static void H_JS(Range r) {
+        static void H_Javascript(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
@@ -186,6 +231,8 @@ namespace quirkpad {
         /// <param name="r">the range to highlight</param>
         static void H_JSON(Range r) {
             r.ClearStyle(Styles.AllStyles);
+            
+            //to be finished.
         }
 
         /// <summary>
@@ -197,6 +244,49 @@ namespace quirkpad {
             
             //comments
             
+        }
+        
+        /// <summary>
+        /// highlights the range according to Github's markdown syntax
+        /// </summary>
+        /// <param name="r">the range to highlight</param>
+        static void H_Markdown(Range r) {
+            r.ClearStyle(Styles.AllStyles);
+            
+            //finish this
+                      
+            //italics and bold
+            r.SetStyle(Styles.Purple, @"[\*|_]{1,2}.*?[\*|_]{1,2}");
+            
+            //block quotes
+            r.SetStyle(Styles.Pink, @"^> .*$", RegexOptions.Multiline);
+            
+            //links
+            r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            foreach(Range ra in r.GetRanges(@"\[.*\]")) {
+                ra.SetStyle(Styles.LinkStyle, @"[^\[\]]");
+            }
+            
+            // # for headers
+            r.SetStyle(Styles.Magenta, @"#+ .*$", RegexOptions.Multiline);
+            
+            //escaped characters
+            r.SetStyle(Styles.Crimson, @"&\w+?;");
+            
+            //code snippets
+            foreach(Range ra in r.GetRanges(@"\`.*\`")) {
+                H_Javascript(ra);
+            }
+        }
+        
+        /// <summary>
+        /// highlights the range according to Python syntax
+        /// </summary>
+        /// <param name="r">the range to highlight</param>
+        static void H_Python(Range r) {
+            r.ClearStyle(Styles.AllStyles);
+            
+            //finish this
         }
         
         //
