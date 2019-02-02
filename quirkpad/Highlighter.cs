@@ -163,14 +163,16 @@ namespace quirkpad {
             //escape characters
             r.SetStyle(Styles.Crimson, @"&\w+?;");
             
-            //attributes
-            r.SetStyle(Styles.Blue, @"\w+\-?");
-            
             //get all the css
             foreach (Range ra in r.GetRanges(@"<style[^>]*>.*?</style>", RegexOptions.Singleline)) {
                 foreach (Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
                     H_CSS(range); //i've deliberately used the greedy operator
                 }
+            }
+            
+            //attributes
+            foreach (Range ra in r.GetRanges(@"\w+\-?\=")) {
+                ra.SetStyle(Styles.Blue, @"\w+\-?");
             }
             
             //gets all of the javascript
@@ -180,6 +182,7 @@ namespace quirkpad {
                 }
             }
             //still buggy
+            
         }
         
         /// <summary>
