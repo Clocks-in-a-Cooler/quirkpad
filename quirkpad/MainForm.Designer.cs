@@ -132,7 +132,7 @@ namespace quirkpad
             this.fctb.SelectionChangedDelayed += new System.EventHandler(this.fctb_SelectionChangedDelayed);
             this.fctb.AutoIndentNeeded += new System.EventHandler<FastColoredTextBoxNS.AutoIndentEventArgs>(this.fctb_AutoIndentNeeded);
             this.fctb.CustomAction += new System.EventHandler<FastColoredTextBoxNS.CustomActionEventArgs>(this.fctb_CustomAction);
-            this.fctb.Load += new System.EventHandler(this.FctbLoad);
+            // this.fctb.Load += new System.EventHandler(this.FctbLoad);
             // 
             // statusLabel
             // 

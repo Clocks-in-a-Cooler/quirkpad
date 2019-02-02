@@ -56,6 +56,29 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //finish this
+            
+            //comments first!
+            r.SetStyle(Styles.Gray, @"[^(https?:)]///?.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
+            
+            //then strings
+            r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            
+            //then numbers
+            r.SetStyle(Styles.Red, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            
+            //then attributes
+            r.SetStyle(Styles.Magenta, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
+            
+            //then class names
+            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\s+(?<range>\w+?)\b");
+            
+            //then keywords
+            r.SetStyle(Styles.Blue, @"\b(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|volatile|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|var|where|yield)\b|#region\b|#endregion\b");
+            
+            //the rest
+            r.SetStyle(Styles.Purple, @"\w");
         }
         
         /// <summary>
@@ -156,8 +179,7 @@ namespace quirkpad {
                     H_Javascript(range); //there should only be one, anyway
                 }
             }
-                        
-            //finish this
+            //still buggy
         }
         
         /// <summary>
@@ -168,9 +190,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, @"//.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, @"[^(https?:)]//.*$", RegexOptions.Multiline);
             r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
             
             //strings
             r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
@@ -208,9 +230,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, @"//.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, @"[^(https?:)]//.*$", RegexOptions.Multiline);
             r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline |  RegexOptions.RightToLeft);
         
             //string highlighting
             r.SetStyle(Styles.Purple, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
@@ -295,5 +317,52 @@ namespace quirkpad {
         //
         // TODO: come up with some colour themes and finish the highlighting rules for more languages
         //
+        
+        //getting some brackets
+        public static Bracket GetBrackets(string lang) {
+            var b = new Bracket();
+            switch (lang) {
+                case ".cs":
+                case ".java":
+                case ".js":
+                    b.Left1 = '(';
+                    b.Right1 = ')';
+                    goto case ".json";
+                case ".css":
+                case ".json":
+                    b.Left2 = '{';
+                    b.Right2 = '}';
+                    break;
+                case ".htm":
+                case ".html":
+                    b.Left1 = '<';
+                    b.Right1 = '>';
+                    break;
+            }
+            
+            return b;
+        }
+    }
+    
+    //this is probably the worst way to do this
+    public class Bracket {
+        public char Left1;
+        public char Right1;
+        public char Left2;
+        public char Right2;
+        
+        public Bracket() {
+            Left1 = '\x0';
+            Right1 = '\x0';
+            Left2 = '\x0';
+            Right2 = '\x0';
+        }
+        
+        public Bracket(char left1, char right1, char left2, char right2) {
+            Left1 = left1;
+            Right1 = right1;
+            Left2 = left2;
+            Right2 = right2;
+        }
     }
 }

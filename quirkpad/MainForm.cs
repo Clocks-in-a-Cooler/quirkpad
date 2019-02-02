@@ -58,10 +58,16 @@ namespace quirkpad {
             statusLabel.Text = "Ready.";
             saved = false;
 
+            //set left and right brackets
+            fctb.LeftBracket = Highlighter.GetBrackets(lang).Left1;
+            fctb.RightBracket = Highlighter.GetBrackets(lang).Right1;
+            fctb.LeftBracket2 = Highlighter.GetBrackets(lang).Left2;
+            fctb.RightBracket2 = Highlighter.GetBrackets(lang).Right2;
+            
             Highlighter.Highlight(fctb.Range, lang);
         }
 
-        
+        #region old highlight
 //        private void Highlight(TextChangedEventArgs e) {            
 //            fctb.LeftBracket = '(';
 //            fctb.RightBracket = ')';
@@ -89,7 +95,8 @@ namespace quirkpad {
 //            //all other letters are blue
 //            fctb.Range.SetStyle(styles.Letters, @"\w");
 //        }
-
+        #endregion
+        
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
             if (!fctb.Selection.IsEmpty)
@@ -102,8 +109,8 @@ namespace quirkpad {
                 return;
             //highlight same words
             var ranges = fctb.VisibleRange.GetRanges("\\b" + text + "\\b").ToArray();
-            if(ranges.Length>1)
-            foreach(var r in ranges)
+            if (ranges.Length > 1)
+            foreach (var r in ranges)
                 r.SetStyle(Styles.SameWords);
         }
 
