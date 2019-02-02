@@ -34,5 +34,17 @@ namespace quirkpad
         void FCTBLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             System.Diagnostics.Process.Start("https://github.com/PavelTorgashov/FastColoredTextBox");
         }
+        
+        void MITLicenseLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            System.Diagnostics.Process.Start("https://choosealicense.com/licenses/mit/");
+        }
+        
+        void LGPLLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            System.Diagnostics.Process.Start("https://choosealicense.com/licenses/lgpl-3.0/");
+        }
+        
+        void SnippetCompilerLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            System.Diagnostics.Process.Start("http://www.sliver.com/dotnet/SnippetCompiler/");
+        }
     }
 }

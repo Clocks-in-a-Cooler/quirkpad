@@ -40,7 +40,7 @@ namespace quirkpad
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.fctb = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.fctb = new FastColoredTextBox();
             this.statusLabel = new System.Windows.Forms.StatusBar();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +84,7 @@ namespace quirkpad
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.fctb)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(fctb)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -132,7 +132,7 @@ namespace quirkpad
             this.fctb.SelectionChangedDelayed += new System.EventHandler(this.fctb_SelectionChangedDelayed);
             this.fctb.AutoIndentNeeded += new System.EventHandler<FastColoredTextBoxNS.AutoIndentEventArgs>(this.fctb_AutoIndentNeeded);
             this.fctb.CustomAction += new System.EventHandler<FastColoredTextBoxNS.CustomActionEventArgs>(this.fctb_CustomAction);
-            this.fctb.Load += new System.EventHandler(this.FctbLoad);
+            // this.fctb.Load += new System.EventHandler(this.FctbLoad);
             // 
             // statusLabel
             // 
