@@ -168,28 +168,28 @@ namespace quirkpad {
 
         private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args) {
             //block {}
-            if (Regex.IsMatch(args.LineText, @"^[^""']*\{.*\}[^""']*$"))
+            if (Regex.IsMatch(args.LineText, @"^[^""']*(\{.*?\}|\[.*?\]|\(.*?\))[^""']*$"))
                 return;
             //start of block {}
-            if (Regex.IsMatch(args.LineText, @"^[^""']*\[{\[(]")) {
+            if (Regex.IsMatch(args.LineText, @"^[^""']*(\[|\{|\()")) {
                 args.ShiftNextLines = args.TabLength;
                 //fctb.InsertText("}");
                 return;
             }
             //end of block {}
-            if (Regex.IsMatch(args.LineText, @"\[}\])][^""']*$")) {
+            if (Regex.IsMatch(args.LineText, @"(\}|\]|\))[^""']*$")) {
                 args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
                 return;
             }
             
             //HTML: <tag>
-            if (Regex.IsMatch(args.LineText, @"<.*[^/]>")) {
+            if (Regex.IsMatch(args.LineText, @"\<.*?[^\/]\>")) {
                 args.ShiftNextLines = args.TabLength;
             }
             
             //HTML: closing tag </>
-            if (Regex.IsMatch(args.LineText, @"</.*>")) {
+            if (Regex.IsMatch(args.LineText, @"\<\/.*?\>")) {
                 args.ShiftNextLines = -args.TabLength;
             }
             
