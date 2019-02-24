@@ -44,7 +44,7 @@ namespace quirkpad
         }
         
         void SnippetCompilerLinkLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            System.Diagnostics.Process.Start("http://www.sliver.com/dotnet/SnippetCompiler/");
+            System.Diagnostics.Process.Start("https://web.archive.org/web/20140110233726/http://www.sliver.com/dotnet/snippetcompiler/");
         }
     }
 }
