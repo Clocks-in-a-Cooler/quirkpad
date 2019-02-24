@@ -17,6 +17,11 @@ namespace quirkpad {
     
     public partial class OptionsForm : Form {
         MainForm mnfrm;
+        
+        const string allDescription = "Highlights all of the text in the current document.\nThis option offers the most accurate highlighting, but at the cost of performance.";
+        const string visibleDescription = "Highlights only what's currently visible in the window.";
+        const string changedDescription = "Highlights only what text has changed.\nThis option offers the best performance, but won't highlight multiline comments properly.";
+        
         public OptionsForm(MainForm mf) {
             mnfrm = mf;
             //
@@ -33,8 +38,24 @@ namespace quirkpad {
             fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
             fontLabel2.Text = OptionsReader.GetFontOption();
             
-            keywordsBox.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
-            keywordsBox.Text = String.Join("\n", OptionsReader.GetPlainKeywords());
+            switch (OptionsReader.HighlightOption) {
+                case "all":
+                    allRadioButton.Checked = true;
+                    highlightRangeLabel.Text = allDescription;
+                    break;
+                case "visible":
+                    visibleRadioButton.Checked = true;
+                    highlightRangeLabel.Text = visibleDescription;
+                    break;
+                case "changed":
+                    changedRadioButton.Checked = true;
+                    highlightRangeLabel.Text = changedDescription;
+                    break;
+                default:
+                    allRadioButton.Checked = true;
+                    highlightRangeLabel.Text = allDescription;
+                    break;
+            }
         }
         
         void ChooseFontClick(object sender, EventArgs e) {
@@ -50,9 +71,28 @@ namespace quirkpad {
             }
         }
         
-        void OkButtonClick(object sender, EventArgs e) {
-            OptionsReader.SetKeywords(keywordsBox.Text.Split('\n'));
-            
+        void RadioButtonCheckChanged(object sender, EventArgs e) {
+            if (sender is RadioButton) {
+                RadioButton rb = (RadioButton) sender;
+                
+                if (rb == allRadioButton) {
+                    OptionsReader.SetHighlightOption("all");
+                    highlightRangeLabel.Text = allDescription;
+                }
+                
+                if (rb == visibleRadioButton) {
+                    OptionsReader.SetHighlightOption("visible");
+                    highlightRangeLabel.Text = visibleDescription;
+                }
+                
+                if (rb == changedRadioButton) {
+                    OptionsReader.SetHighlightOption("changed");
+                    highlightRangeLabel.Text = changedDescription;
+                }
+            }
+        }
+        
+        void OkButtonClick(object sender, EventArgs e) {            
             Close();
         }
     }

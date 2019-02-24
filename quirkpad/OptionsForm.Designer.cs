@@ -19,9 +19,11 @@ namespace quirkpad
         private System.Windows.Forms.Label fontLabel;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label fontLabel2;
-        private System.Windows.Forms.Label keywordLabel;
-        private System.Windows.Forms.RichTextBox keywordsBox;
-        private System.Windows.Forms.Label warningLabel;
+        private System.Windows.Forms.RadioButton allRadioButton;
+        private System.Windows.Forms.RadioButton visibleRadioButton;
+        private System.Windows.Forms.RadioButton changedRadioButton;
+        private System.Windows.Forms.GroupBox highlightGroupBox;
+        private System.Windows.Forms.Label highlightRangeLabel;
         
         /// <summary>
         /// Disposes resources used by the form.
@@ -50,9 +52,12 @@ namespace quirkpad
             this.fontLabel = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.fontLabel2 = new System.Windows.Forms.Label();
-            this.keywordLabel = new System.Windows.Forms.Label();
-            this.keywordsBox = new System.Windows.Forms.RichTextBox();
-            this.warningLabel = new System.Windows.Forms.Label();
+            this.allRadioButton = new System.Windows.Forms.RadioButton();
+            this.visibleRadioButton = new System.Windows.Forms.RadioButton();
+            this.changedRadioButton = new System.Windows.Forms.RadioButton();
+            this.highlightGroupBox = new System.Windows.Forms.GroupBox();
+            this.highlightRangeLabel = new System.Windows.Forms.Label();
+            this.highlightGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // chooseFont
@@ -76,7 +81,7 @@ namespace quirkpad
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(197, 214);
+            this.okButton.Location = new System.Drawing.Point(197, 144);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 2;
@@ -93,42 +98,66 @@ namespace quirkpad
             this.fontLabel2.Text = "label1";
             this.fontLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // keywordLabel
+            // allRadioButton
             // 
-            this.keywordLabel.Location = new System.Drawing.Point(12, 32);
-            this.keywordLabel.Name = "keywordLabel";
-            this.keywordLabel.Size = new System.Drawing.Size(100, 23);
-            this.keywordLabel.TabIndex = 5;
-            this.keywordLabel.Text = "Keywords";
-            this.keywordLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.allRadioButton.Location = new System.Drawing.Point(6, 19);
+            this.allRadioButton.Name = "allRadioButton";
+            this.allRadioButton.Size = new System.Drawing.Size(104, 24);
+            this.allRadioButton.TabIndex = 9;
+            this.allRadioButton.TabStop = true;
+            this.allRadioButton.Text = "All";
+            this.allRadioButton.UseVisualStyleBackColor = true;
+            allRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
             // 
-            // keywordsBox
+            // visibleRadioButton
             // 
-            this.keywordsBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.keywordsBox.Location = new System.Drawing.Point(12, 58);
-            this.keywordsBox.Name = "keywordsBox";
-            this.keywordsBox.Size = new System.Drawing.Size(260, 116);
-            this.keywordsBox.TabIndex = 6;
-            this.keywordsBox.Text = "";
-            this.keywordsBox.WordWrap = false;
+            this.visibleRadioButton.Location = new System.Drawing.Point(6, 43);
+            this.visibleRadioButton.Name = "visibleRadioButton";
+            this.visibleRadioButton.Size = new System.Drawing.Size(104, 21);
+            this.visibleRadioButton.TabIndex = 11;
+            this.visibleRadioButton.TabStop = true;
+            this.visibleRadioButton.Text = "Visible";
+            this.visibleRadioButton.UseVisualStyleBackColor = true;
+            visibleRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
             // 
-            // warningLabel
+            // changedRadioButton
             // 
-            this.warningLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.warningLabel.Location = new System.Drawing.Point(13, 181);
-            this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(259, 30);
-            this.warningLabel.TabIndex = 7;
-            this.warningLabel.Text = "* Changes will take effect after restarting Quirkpad. *";
+            this.changedRadioButton.Location = new System.Drawing.Point(6, 66);
+            this.changedRadioButton.Name = "changedRadioButton";
+            this.changedRadioButton.Size = new System.Drawing.Size(104, 24);
+            this.changedRadioButton.TabIndex = 12;
+            this.changedRadioButton.TabStop = true;
+            this.changedRadioButton.Text = "Changed";
+            this.changedRadioButton.UseVisualStyleBackColor = true;
+            changedRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
+            // 
+            // highlightGroupBox
+            // 
+            this.highlightGroupBox.Controls.Add(this.highlightRangeLabel);
+            this.highlightGroupBox.Controls.Add(this.allRadioButton);
+            this.highlightGroupBox.Controls.Add(this.changedRadioButton);
+            this.highlightGroupBox.Controls.Add(this.visibleRadioButton);
+            this.highlightGroupBox.Location = new System.Drawing.Point(12, 41);
+            this.highlightGroupBox.Name = "highlightGroupBox";
+            this.highlightGroupBox.Size = new System.Drawing.Size(260, 97);
+            this.highlightGroupBox.TabIndex = 13;
+            this.highlightGroupBox.TabStop = false;
+            this.highlightGroupBox.Text = "Highlighting Range";
+            // 
+            // highlightRangeLabel
+            // 
+            this.highlightRangeLabel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.highlightRangeLabel.Location = new System.Drawing.Point(116, 16);
+            this.highlightRangeLabel.Name = "highlightRangeLabel";
+            this.highlightRangeLabel.Size = new System.Drawing.Size(137, 71);
+            this.highlightRangeLabel.TabIndex = 13;
             // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 249);
-            this.Controls.Add(this.warningLabel);
-            this.Controls.Add(this.keywordsBox);
-            this.Controls.Add(this.keywordLabel);
+            this.ClientSize = new System.Drawing.Size(284, 177);
+            this.Controls.Add(this.highlightGroupBox);
             this.Controls.Add(this.fontLabel2);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.fontLabel);
@@ -137,6 +166,7 @@ namespace quirkpad
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsForm";
             this.Text = "Quirkpad Options";
+            this.highlightGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

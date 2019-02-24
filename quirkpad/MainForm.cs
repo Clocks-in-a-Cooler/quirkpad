@@ -1,11 +1,3 @@
-/*
- * Created by SharpDevelop.
- * User: cacan_000
- * Date: 2018/10/4
- * Time: PM 10:33
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -64,7 +56,23 @@ namespace quirkpad {
             fctb.LeftBracket2 = Highlighter.GetBrackets(lang).Left2;
             fctb.RightBracket2 = Highlighter.GetBrackets(lang).Right2;
             
-            Highlighter.Highlight(fctb.Range, lang);
+            Range highlightRange;
+            switch (OptionsReader.HighlightOption) {
+                case "all":
+                    highlightRange = fctb.Range;
+                    break;
+                case "visible":
+                    highlightRange = fctb.VisibleRange;
+                    break;
+                case "changed":
+                    highlightRange = e.ChangedRange;
+                    break;
+                default:
+                    highlightRange = fctb.Range;
+                    break;
+            }
+            
+            Highlighter.Highlight(highlightRange, lang);
         }
 
         #region old highlight
@@ -163,17 +171,28 @@ namespace quirkpad {
             if (Regex.IsMatch(args.LineText, @"^[^""']*\{.*\}[^""']*$"))
                 return;
             //start of block {}
-            if (Regex.IsMatch(args.LineText, @"^[^""']*\{")) {
+            if (Regex.IsMatch(args.LineText, @"^[^""']*\[{\[(]")) {
                 args.ShiftNextLines = args.TabLength;
                 //fctb.InsertText("}");
                 return;
             }
             //end of block {}
-            if (Regex.IsMatch(args.LineText, @"\}[^""']*$")) {
+            if (Regex.IsMatch(args.LineText, @"\[}\])][^""']*$")) {
                 args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
                 return;
             }
+            
+            //HTML: <tag>
+            if (Regex.IsMatch(args.LineText, @"<.*[^/]>")) {
+                args.ShiftNextLines = args.TabLength;
+            }
+            
+            //HTML: closing tag </>
+            if (Regex.IsMatch(args.LineText, @"</.*>")) {
+                args.ShiftNextLines = -args.TabLength;
+            }
+            
             //label
             if (Regex.IsMatch(args.LineText, @"^\s*\w+\s*:\s*($|//)") &&
                 !Regex.IsMatch(args.LineText, @"^\s*default\s*:")) {
@@ -275,6 +294,7 @@ namespace quirkpad {
             
             statusLabel.Text = "File Saved.";
             this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+            Highlighter.Highlight(fctb.Range, lang);
         }
         
         void WarnSave() {
@@ -306,6 +326,7 @@ namespace quirkpad {
                 fctb.SaveToFile(filePath, new System.Text.UTF8Encoding());
                 statusLabel.Text = "File saved.";
                 this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+                Highlighter.Highlight(fctb.Range, lang);
             } else if (result == DialogResult.Cancel || result == DialogResult.Abort) {
                 statusLabel.Text = "File not saved at a new location.";
             }
@@ -380,11 +401,14 @@ namespace quirkpad {
         //about window opens
         void AboutToolStripMenuItemClick(object sender, EventArgs e) {
             HelpForm hf = new HelpForm();
-            hf.ShowDialog();
+            hf.StartPosition = FormStartPosition.CenterParent;
+            hf.ShowDialog(this);
         }
         
         void HelpToolStripButtonClick(object s, EventArgs e) {
-            new InfoForm().ShowDialog();
+            InfoForm info = new InfoForm();
+            info.StartPosition = FormStartPosition.CenterParent;
+            info.ShowDialog(this);
         }
         #endregion
         
@@ -398,7 +422,8 @@ namespace quirkpad {
         
         void ShowOptionsDialog() {
             OptionsForm optfrm = new OptionsForm(this);
-            optfrm.ShowDialog();
+            optfrm.StartPosition = FormStartPosition.CenterParent;
+            optfrm.ShowDialog(this);
         }
         
         void OptionsToolStripMenuItemClick(object sender, EventArgs e) {
@@ -426,7 +451,9 @@ namespace quirkpad {
         }
         
         void HelpToolStripMenuItem1Click(object sender, EventArgs e) {
-            new InfoForm().ShowDialog();
+            InfoForm info = new InfoForm();
+            info.StartPosition = FormStartPosition.CenterParent;
+            info.ShowDialog(this);
         }
         
         void UndoToolStripButtonClick(object sender, EventArgs e) {
@@ -439,6 +466,11 @@ namespace quirkpad {
         
         void SelectAllToolStripMenuItemClick(object sender, EventArgs e) {
             fctb.SelectAll();
+        }
+        
+        void OpenFolderToolStripMenuItemClick(object sender, EventArgs e) {
+            string arg = "/Select, " + "\"" + filePath + "\"";
+            System.Diagnostics.Process.Start("explorer.exe", arg);
         }
     }
 }

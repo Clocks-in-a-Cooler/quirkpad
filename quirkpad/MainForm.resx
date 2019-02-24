@@ -158,6 +158,15 @@
         AAAASUVORK5CYII=
 </value>
   </data>
+  <data name="openFolderToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAK5JREFUOE9j
+        +P//P0UYA3z79i0BiP8Ti6HaEAAoeP/NvRP/72yrIojhBiCbCML393X9f3J6+f8P7z/ixBgGoJv+7sUj
+        rBphGKsB2BTiwtQzAERQbMC9XU1gAUIYOVxAfJgB85+dW4mhGBt+dGI+VgMcPr66j6EYF3798DKqAdBA
+        vP/w0EQMxdjw/b2dWA0oIDb1gfCzy9vANLIBAl8+vQMLkIqx5jBSMFZB4vF/BgD9ZjGLVpvxVwAAAABJ
+        RU5ErkJggg==
+</value>
+  </data>
   <data name="exitToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAGZJREFUOE9j
