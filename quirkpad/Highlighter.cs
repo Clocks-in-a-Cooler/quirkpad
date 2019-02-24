@@ -65,17 +65,27 @@ namespace quirkpad {
             //then strings
             r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
             
+            //#region and #endregion tags
+            r.SetStyle(Styles.DarkCyan, @"#region.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.DarkCyan, @"#endregion.*$", RegexOptions.Multiline);
+            
             //then numbers
             r.SetStyle(Styles.Red, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
             
             //then attributes
             r.SetStyle(Styles.Magenta, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
             
-            //then class names
-            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\s+(?<range>\w+?)\b");
+            //then class names //\s+(?<range>\w+?)
+            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\b");
             
             //then keywords
-            r.SetStyle(Styles.Blue, @"\b(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|volatile|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|var|where|yield)\b|#region\b|#endregion\b");
+            r.SetStyle(Styles.Blue, @"\b(abstract|as|base|break|case|catch|checked|const|continue|default|do|else|explicit|extern|finally|fixed|for|foreach|goto|if|implicit|in|internal|is|lock|namespace|new|object|operator|override|private|protected|public|readonly|ref|return|sealed|sizeof|stackalloc|static|switch|this|throw|try|typeof|unchecked|unsafe|using|virtual|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|where|yield)\b");
+            
+            //the primitive types
+            r.SetStyle(Styles.Brown, @"\b(bool|byte|char|decimal|delegate|double|enum|event|float|int|interface|long|sbyte|short|string|uint|ulong|ushort|void|var|volatile)\b");
+            
+            //some special values
+            r.SetStyle(Styles.Green, @"\b(true|false|null|undefined|params|out)\b");
             
             //the rest
             r.SetStyle(Styles.Purple, @"\w");

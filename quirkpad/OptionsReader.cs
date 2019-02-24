@@ -5,6 +5,7 @@ using System.Windows.Forms;
 namespace quirkpad {
     public static class OptionsReader {
         private static readonly string OptionsFilePath = Application.StartupPath + "\\quirkpad_settings.txt";
+        public static string HighlightOption = "";
         
         public static string[] GetKeywords() {
             string[] keywords = new string[3];
@@ -104,11 +105,32 @@ namespace quirkpad {
                 
                 File.WriteAllLines(OptionsFilePath, lines);
             } else {
-                string[] newLines = new string[] { "[font size]", f.ToString() };
+                string[] newLines = { "[font size]", f.ToString() };
                 
                 File.AppendAllLines(OptionsFilePath, newLines);
             }
         }
+        
+        public static void GetHighlightOption() {
+            int index = 0;
+            HighlightOption = GetLine("[highlight]", out index) ? File.ReadAllLines(OptionsFilePath)[index + 1] : "all";
+        }
+        
+        public static void SetHighlightOption(string option) {
+            HighlightOption = option;
+            int index = 0;
+            if (GetLine("[highlight]", out index)) {
+                string[] lines = File.ReadAllLines(OptionsFilePath);
+                lines[index + 1] = HighlightOption;
+                
+                File.WriteAllLines(OptionsFilePath, lines);
+            } else {
+                string[] newLines = { "[highlight]", HighlightOption };
+                
+                File.AppendAllLines(OptionsFilePath, newLines);
+            }
+        }
+        
         /*
         public static Theme GetTheme() {
             int index = 0;
