@@ -16,6 +16,7 @@ namespace quirkpad {
         public static TextStyle DarkGreen = new TextStyle(Brushes.ForestGreen, null, FontStyle.Regular);
         public static TextStyle DarkCyan = new TextStyle(Brushes.DarkCyan, null, FontStyle.Regular);
         public static TextStyle Blue = new TextStyle(Brushes.DodgerBlue, null, FontStyle.Regular);
+        public static TextStyle DarkBlue = new TextStyle(Brushes.RoyalBlue, null, FontStyle.Regular);
         public static TextStyle Purple = new TextStyle(Brushes.MediumOrchid, null, FontStyle.Regular);
         public static TextStyle Magenta = new TextStyle(Brushes.MediumVioletRed, null, FontStyle.Regular);
         public static TextStyle Black = new TextStyle(Brushes.Black, null, FontStyle.Regular);
@@ -27,7 +28,7 @@ namespace quirkpad {
         public static MarkerStyle SameWords = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.LightSlateGray)));
         
         public static TextStyle[] AllStyles = {
-            Brown, Pink, Crimson, Red, Orange, Yellow, DarkYellow, Olive, Green, DarkGreen, DarkCyan, Blue,
+            Brown, Pink, Crimson, Red, Orange, Yellow, DarkYellow, Olive, Green, DarkGreen, DarkCyan, Blue, DarkBlue,
             Purple, Magenta, Black, White, Gray, LinkStyle
         };
         

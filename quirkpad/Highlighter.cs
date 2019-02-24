@@ -79,16 +79,16 @@ namespace quirkpad {
             r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\b");
             
             //then keywords
-            r.SetStyle(Styles.Blue, @"\b(abstract|as|base|break|case|catch|checked|const|continue|default|do|else|explicit|extern|finally|fixed|for|foreach|goto|if|implicit|in|internal|is|lock|namespace|new|object|operator|override|private|protected|public|readonly|ref|return|sealed|sizeof|stackalloc|static|switch|this|throw|try|typeof|unchecked|unsafe|using|virtual|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|where|yield)\b");
+            r.SetStyle(Styles.DarkBlue, @"\b(abstract|as|base|break|case|catch|checked|const|continue|default|do|else|explicit|extern|finally|fixed|for|foreach|goto|if|implicit|in|internal|is|lock|namespace|new|object|operator|override|private|protected|public|readonly|ref|return|sealed|sizeof|stackalloc|static|switch|this|throw|try|typeof|unchecked|unsafe|using|virtual|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|where|yield)\b");
             
             //the primitive types
-            r.SetStyle(Styles.Brown, @"\b(bool|byte|char|decimal|delegate|double|enum|event|float|int|interface|long|sbyte|short|string|uint|ulong|ushort|void|var|volatile)\b");
+            r.SetStyle(Styles.Purple, @"\b(bool|byte|char|decimal|delegate|double|enum|event|float|int|interface|long|sbyte|short|string|uint|ulong|ushort|void|var|volatile)\b");
             
             //some special values
             r.SetStyle(Styles.Green, @"\b(true|false|null|undefined|params|out)\b");
             
             //the rest
-            r.SetStyle(Styles.Purple, @"\w");
+            r.SetStyle(Styles.Blue, @"\w");
         }
         
         /// <summary>
@@ -298,7 +298,7 @@ namespace quirkpad {
             r.SetStyle(Styles.Crimson, @"&\w+?;");
             
             //code snippets
-            foreach(Range ra in r.GetRanges(@"\`.*\`")) {
+            foreach(Range ra in r.GetRanges(@"\`.*?\`")) {
                 H_Javascript(ra);
             }
         }
