@@ -467,5 +467,10 @@ namespace quirkpad {
         void SelectAllToolStripMenuItemClick(object sender, EventArgs e) {
             fctb.SelectAll();
         }
+        
+        void OpenFolderToolStripMenuItemClick(object sender, EventArgs e) {
+            string arg = "/Select, " + "\"" + filePath + "\"";
+            System.Diagnostics.Process.Start("explorer.exe", arg);
+        }
     }
 }
