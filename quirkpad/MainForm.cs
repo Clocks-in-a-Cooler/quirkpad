@@ -183,7 +183,7 @@ namespace quirkpad {
             int rightSquare = Regex.Matches(args.LineText, @"\]").Count;
             int leftParen = Regex.Matches(args.LineText, @"\(").Count;
             int rightParen = Regex.Matches(args.LineText, @"\)").Count;
-            int openTag = Regex.Matches(args.LineText, @"\<.*[^\/]\>").Count;
+            int openTag = Regex.Matches(args.LineText, @"\<[^!].*[^\/]\>").Count;
             int closeTag = Regex.Matches(args.LineText, @"\<\/.*\>").Count;
             
             if (leftBrace > rightBrace || leftSquare > rightSquare || leftParen > rightParen || openTag > closeTag) {
