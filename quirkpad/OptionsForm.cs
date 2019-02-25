@@ -20,7 +20,7 @@ namespace quirkpad {
         
         const string allDescription = "Highlights all of the text in the current document.\nThis option offers the most accurate highlighting, but at the cost of performance.";
         const string visibleDescription = "Highlights only what's currently visible in the window.";
-        const string changedDescription = "Highlights only what text has changed.\nThis option offers the best performance, but won't highlight multiline comments properly.";
+        const string changedDescription = "Highlights only what text has changed.\nThis option offers the best performance, but multiline won't highlight properly.";
         
         public OptionsForm(MainForm mf) {
             mnfrm = mf;
