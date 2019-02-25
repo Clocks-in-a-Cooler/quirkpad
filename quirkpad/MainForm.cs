@@ -183,8 +183,8 @@ namespace quirkpad {
             int rightSquare = Regex.Matches(args.LineText, @"\]").Count;
             int leftParen = Regex.Matches(args.LineText, @"\(").Count;
             int rightParen = Regex.Matches(args.LineText, @"\)").Count;
-            int openTag = Regex.Matches(args.LineText, @"\<.*?[^\/]\>").Count;
-            int closeTag = Regex.Matches(args.LineText, @"\<\/.*?\>").Count;
+            int openTag = Regex.Matches(args.LineText, @"\<.*[^\/]\>").Count;
+            int closeTag = Regex.Matches(args.LineText, @"\<\/.*\>").Count;
             
             if (leftBrace > rightBrace || leftSquare > rightSquare || leftParen > rightParen || openTag > closeTag) {
                 args.ShiftNextLines = args.TabLength;
@@ -212,16 +212,6 @@ namespace quirkpad {
                 args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
                 return;
-            }
-            
-            //HTML: <tag>
-            if (Regex.IsMatch(args.LineText, @"\<.*?[^\/]\>")) {
-                args.ShiftNextLines = args.TabLength;
-            }
-            
-            //HTML: closing tag </>
-            if (Regex.IsMatch(args.LineText, @"\<\/.*?\>")) {
-                args.ShiftNextLines = -args.TabLength;
             } */
             
             //label
@@ -230,11 +220,13 @@ namespace quirkpad {
                 args.Shift = -args.TabLength;
                 return;
             }
+            
             //some statements: case, default
             if (Regex.IsMatch(args.LineText, @"^\s*(case|default)\b.*:\s*($|//)")) {
-                args.Shift = -args.TabLength / 2;
+                args.Shift = -args.TabLength;
                 return;
             }
+            
             //is unclosed operator in previous line ?
             if (Regex.IsMatch(args.PrevLineText, @"^\s*(if|for|foreach|while|[\}\s]*else)\b[^{]*$"))
                 if (!Regex.IsMatch(args.PrevLineText, @"(;\s*$)|(;\s*//)")) {//operator is unclosed
