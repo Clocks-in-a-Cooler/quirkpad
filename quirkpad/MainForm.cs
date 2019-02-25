@@ -168,12 +168,43 @@ namespace quirkpad {
 
         private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args) {
             //block {}
+            /*
             if (Regex.IsMatch(args.LineText, @"^[^""']*(\{.*?\}|\[.*?\]|\(.*?\))[^""']*$"))
                 return;
+             */
+            
+            if (Regex.IsMatch(args.LineText, @"\<\!DOCTYPE.*?\>")) {
+                return;
+            }
+            
+            int leftBrace = Regex.Matches(args.LineText, @"\{").Count;
+            int rightBrace = Regex.Matches(args.LineText, @"\}").Count;
+            int leftSquare = Regex.Matches(args.LineText, @"\[").Count;
+            int rightSquare = Regex.Matches(args.LineText, @"\]").Count;
+            int leftParen = Regex.Matches(args.LineText, @"\(").Count;
+            int rightParen = Regex.Matches(args.LineText, @"\)").Count;
+            int openTag = Regex.Matches(args.LineText, @"\<.*?[^\/]\>").Count;
+            int closeTag = Regex.Matches(args.LineText, @"\<\/.*?\>").Count;
+            
+            if (leftBrace > rightBrace || leftSquare > rightSquare || leftParen > rightParen || openTag > closeTag) {
+                args.ShiftNextLines = args.TabLength;
+                return;
+            }
+            
+            if (leftBrace < rightBrace || leftSquare < rightSquare || leftParen < rightParen || openTag < closeTag) {
+                args.Shift = -args.TabLength;
+                args.ShiftNextLines = -args.TabLength;
+                return;
+            }
+            
+            if (leftBrace == rightBrace || leftSquare == rightSquare || leftParen == rightParen || openTag == closeTag) {
+                return;
+            }
+            
+            /*
             //start of block {}
             if (Regex.IsMatch(args.LineText, @"^[^""']*(\[|\{|\()")) {
                 args.ShiftNextLines = args.TabLength;
-                //fctb.InsertText("}");
                 return;
             }
             //end of block {}
@@ -191,7 +222,7 @@ namespace quirkpad {
             //HTML: closing tag </>
             if (Regex.IsMatch(args.LineText, @"\<\/.*?\>")) {
                 args.ShiftNextLines = -args.TabLength;
-            }
+            } */
             
             //label
             if (Regex.IsMatch(args.LineText, @"^\s*\w+\s*:\s*($|//)") &&
