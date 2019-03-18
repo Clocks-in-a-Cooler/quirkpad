@@ -5,9 +5,35 @@ using System.Linq;
 namespace quirkpad {
     
     /// <summary>
-    /// Hightlights languages that FCTB doesn't support
+    /// Hightlights languages, because I like my own custom themes.
     /// </summary>
     public static class Highlighter {
+        
+        //patterns, for code readability.
+        /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
+        /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
+        public static string ForwardSlashCommentPattern = @"[^(https?:)""']///?.*$";
+        
+        /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
+        /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
+        public static string HashtagCommentPattern = @"[""']#.*$";
+        
+        /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
+        public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
+        
+        /// <summary>Regex pattern for multiline comments <c>/*</c> and <c>*/</c>.</summary>
+        /// <remarks>Use with <c>RegexOptions.Singleline</c>.</remarks>
+        public static string MultilineCommentPattern1 = @"(/\*.*?\*/)|(/\*.*)";
+        
+        /// <summary>Regex pattern for multiline comments <c>/*</c> and <c>*/</c>.</summary>
+        /// <remarks>Use with <c>RegexOptions.Singleline</c> and <c>RegexOptions.RightToLeft</c>.</remarks>
+        public static string MultilineCommentPattern2 = @"(/\*.*?\*/)|(.*?\*/)";
+        
+        /// <summary>Regex pattern for hyperlinks.</summary>
+        public static string HyperLinkPattern = @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b";
+        
+        /// <summary>Regex pattern for numbers.</summary>
+        public static string NumberPattern = @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b";
         
         /// <summary>
         /// method for highlighting
@@ -252,8 +278,7 @@ namespace quirkpad {
             //number highlighting
             r.SetStyle(Styles.Green, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
             //keywords
-            r.SetStyle(Styles.Orange, @"\b(break|case|catch|const|continue|default|delete|do|else|finally|for|function|if|import|in|instanceof|new|return|switch|this|throw|try|typeof|var|while|with|yield
-)\b");
+            r.SetStyle(Styles.Orange, @"\b(break|case|catch|const|continue|default|delete|do|else|finally|for|function|if|import|in|instanceof|new|return|switch|this|throw|try|typeof|var|while|with|yield)\b");
             //get and set deserve their own
             r.SetStyle(Styles.Brown, @"\b(get|set|prototype)\b");
             //special values, such as true, false, null, and undefined
@@ -331,6 +356,31 @@ namespace quirkpad {
         // TODO: come up with some colour themes and finish the highlighting rules for more languages
         //
         
+        public static string OpenBrace = @"^.*[^""'(\/\/)]*\{[^\}]*$";
+        public static string CloseBrace = @"^.*[^""'(\/\/)\{]*\}.*$";
+        
+        ///<summary>does autoindenting</summary>
+        public static void AutoIndent(object sender, AutoIndentEventArgs args) {
+            //start of a block {, [, (, or /* comments */
+            if (Regex.IsMatch(args.LineText, OpenBrace)
+            ) {
+                args.ShiftNextLines = args.TabLength;
+            }
+            
+            // <tags> and todo: comments in HTML
+            if (Regex.IsMatch(args.LineText, @"\<!?[^(doctype)].*[^\/]\>?", RegexOptions.IgnoreCase)) {
+                args.ShiftNextLines = args.TabLength;
+                return;
+            }
+            
+            //ending a block
+            if (Regex.IsMatch(args.LineText, CloseBrace)
+            ) {
+                args.Shift          = -args.TabLength;
+                args.ShiftNextLines = -args.TabLength;
+            }
+        }
+        
         //getting some brackets
         public static Bracket GetBrackets(string lang) {
             var b = new Bracket();
@@ -352,7 +402,6 @@ namespace quirkpad {
                     b.Right1 = '>';
                     break;
             }
-            
             return b;
         }
     }

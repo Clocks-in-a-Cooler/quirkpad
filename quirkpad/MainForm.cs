@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace quirkpad {
     /// <summary>
-    /// Description of MainForm.
+    /// The main window of the application.
     /// </summary>
     public partial class MainForm : Form {
         
@@ -36,6 +36,8 @@ namespace quirkpad {
             fctb.Font = textFont;
                         
             fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
+            
+            OptionsReader.GetHighlightOption();
             
             saved = true;
         }
@@ -74,36 +76,6 @@ namespace quirkpad {
             
             Highlighter.Highlight(highlightRange, lang);
         }
-
-        #region old highlight
-//        private void Highlight(TextChangedEventArgs e) {            
-//            fctb.LeftBracket = '(';
-//            fctb.RightBracket = ')';
-//            fctb.LeftBracket2 = '{';
-//            fctb.RightBracket2 = '}';
-//            //clear style of changed range
-//            fctb.Range.ClearStyle(styles.Comment, styles.String, styles.Number, styles.KeyWords, styles.SpecialKeyWords, styles.SpecialValues, styles.Letters);
-//
-//            //hyperlink highlighting
-//            fctb.Range.SetStyle(styles.Links, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
-//            //comment highlighting
-//            fctb.Range.SetStyle(styles.Comment, @"//.*$", RegexOptions.Multiline);
-//            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-//            fctb.Range.SetStyle(styles.Comment, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline|RegexOptions.RightToLeft);
-//            //string highlighting
-//            fctb.Range.SetStyle(styles.String, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
-//            //number highlighting
-//            fctb.Range.SetStyle(styles.Number, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
-//            //keywords
-//            fctb.Range.SetStyle(styles.KeyWords, keywords[0]);
-//            //get and set deserve their own
-//            fctb.Range.SetStyle(styles.SpecialKeyWords, keywords[1]);
-//            //special values, such as true, false, null, and undefined
-//            fctb.Range.SetStyle(styles.SpecialValues, keywords[2]);
-//            //all other letters are blue
-//            fctb.Range.SetStyle(styles.Letters, @"\w");
-//        }
-        #endregion
         
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
@@ -167,72 +139,7 @@ namespace quirkpad {
         }
 
         private void fctb_AutoIndentNeeded(object sender, AutoIndentEventArgs args) {
-            //block {}
-            /*
-            if (Regex.IsMatch(args.LineText, @"^[^""']*(\{.*?\}|\[.*?\]|\(.*?\))[^""']*$"))
-                return;
-             */
-            
-            if (Regex.IsMatch(args.LineText, @"\<\!DOCTYPE.*?\>")) {
-                return;
-            }
-            
-            int leftBrace = Regex.Matches(args.LineText, @"\{").Count;
-            int rightBrace = Regex.Matches(args.LineText, @"\}").Count;
-            int leftSquare = Regex.Matches(args.LineText, @"\[").Count;
-            int rightSquare = Regex.Matches(args.LineText, @"\]").Count;
-            int leftParen = Regex.Matches(args.LineText, @"\(").Count;
-            int rightParen = Regex.Matches(args.LineText, @"\)").Count;
-            int openTag = Regex.Matches(args.LineText, @"\<[^!].*[^\/]\>").Count;
-            int closeTag = Regex.Matches(args.LineText, @"\<\/.*\>").Count;
-            
-            if (leftBrace > rightBrace || leftSquare > rightSquare || leftParen > rightParen || openTag > closeTag) {
-                args.ShiftNextLines = args.TabLength;
-                return;
-            }
-            
-            if (leftBrace < rightBrace || leftSquare < rightSquare || leftParen < rightParen || openTag < closeTag) {
-                args.Shift = -args.TabLength;
-                args.ShiftNextLines = -args.TabLength;
-                return;
-            }
-            
-            if (leftBrace == rightBrace || leftSquare == rightSquare || leftParen == rightParen || openTag == closeTag) {
-                return;
-            }
-            
-            /*
-            //start of block {}
-            if (Regex.IsMatch(args.LineText, @"^[^""']*(\[|\{|\()")) {
-                args.ShiftNextLines = args.TabLength;
-                return;
-            }
-            //end of block {}
-            if (Regex.IsMatch(args.LineText, @"(\}|\]|\))[^""']*$")) {
-                args.Shift = -args.TabLength;
-                args.ShiftNextLines = -args.TabLength;
-                return;
-            } */
-            
-            //label
-            if (Regex.IsMatch(args.LineText, @"^\s*\w+\s*:\s*($|//)") &&
-                !Regex.IsMatch(args.LineText, @"^\s*default\s*:")) {
-                args.Shift = -args.TabLength;
-                return;
-            }
-            
-            //some statements: case, default
-            if (Regex.IsMatch(args.LineText, @"^\s*(case|default)\b.*:\s*($|//)")) {
-                args.Shift = -args.TabLength;
-                return;
-            }
-            
-            //is unclosed operator in previous line ?
-            if (Regex.IsMatch(args.PrevLineText, @"^\s*(if|for|foreach|while|[\}\s]*else)\b[^{]*$"))
-                if (!Regex.IsMatch(args.PrevLineText, @"(;\s*$)|(;\s*//)")) {//operator is unclosed
-                    args.Shift = args.TabLength;
-                    return;
-                }
+            Highlighter.AutoIndent(sender, args);
         }
 
         private void fctb_CustomAction(object sender, CustomActionEventArgs e) {
@@ -276,6 +183,7 @@ namespace quirkpad {
                 Text = Path.GetFileName(filePath) + " - Quirkpad";
                 saved = true;
                 
+                Highlighter.Highlight(fctb.Range, lang);
             }
             
             statusLabel.Text = "Ready.";
@@ -292,6 +200,8 @@ namespace quirkpad {
             statusLabel.Text = "File opened.";
             saved = true;
             this.Text = Path.GetFileName(filePath) + " - Quirkpad";
+            
+            Highlighter.Highlight(fctb.Range, lang);
         }
         
         //for saving files
