@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutLabel.Text" xml:space="preserve">
-    <value>Quirkpad v0.10
+    <value>Quirkpad v0.11
 by Clocks-in-a-Cooler
 
 This app is licensed under the
