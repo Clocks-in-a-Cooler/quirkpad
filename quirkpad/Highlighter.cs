@@ -84,19 +84,19 @@ namespace quirkpad {
             //finish this
             
             //comments first!
-            r.SetStyle(Styles.Gray, @"[^(https?:)]///?.*$", RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline | RegexOptions.RightToLeft);
             
             //then strings
-            r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            r.SetStyle(Styles.Orange, StringPattern);
             
             //#region and #endregion tags
             r.SetStyle(Styles.DarkCyan, @"#region.*$", RegexOptions.Multiline);
             r.SetStyle(Styles.DarkCyan, @"#endregion.*$", RegexOptions.Multiline);
             
             //then numbers
-            r.SetStyle(Styles.Red, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            r.SetStyle(Styles.Red, NumberPattern);
             
             //then attributes
             r.SetStyle(Styles.Magenta, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
@@ -125,14 +125,14 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles); //easily clear everything
             
             //highlight links first
-            r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
             
             //then highlight comments
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline |  RegexOptions.RightToLeft);
             
             //then strings
-            r.SetStyle(Styles.DarkCyan, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            r.SetStyle(Styles.DarkCyan, StringPattern);
             
             //then colour codes
             r.SetStyle(Styles.Crimson, @"#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
@@ -229,12 +229,12 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, @"[^(https?:)]//.*$", RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline | RegexOptions.RightToLeft);
             
             //strings
-            r.SetStyle(Styles.Orange, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            r.SetStyle(Styles.Orange, StringPattern);
             
             //keywords
             r.SetStyle(Styles.DarkYellow, @"\b(abstract|assert|break|case|catch|class|const|continue|default|do|else|exports|extends|final|finally|for|goto|if|implements|interface|native|new|package|private|protected|public|requires|return|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|var|volatile|while)\b");
@@ -252,7 +252,7 @@ namespace quirkpad {
             r.SetStyle(Styles.Brown, @"\b(package|import)\b");
             
             //numbers
-            r.SetStyle(Styles.Red, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            r.SetStyle(Styles.Red, NumberPattern);
             
             //special values
             r.SetStyle(Styles.Purple, @"\b(true|false|undefined|null)\b");
@@ -295,7 +295,8 @@ namespace quirkpad {
         static void H_JSON(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
-            //to be finished.
+            //strings. what else?
+            r.SetStyle(Styles.Crimson, StringPattern);
         }
         
         /// <summary>
@@ -356,8 +357,10 @@ namespace quirkpad {
         // TODO: come up with some colour themes and finish the highlighting rules for more languages
         //
         
+        //regex patterns for various brackets and braces below.
         public static string OpenBrace = @"^.*[^""'(\/\/)]*\{[^\}]*$";
         public static string CloseBrace = @"^.*[^""'(\/\/)\{]*\}.*$";
+        //TODO: add more patterns.
         
         ///<summary>does autoindenting</summary>
         public static void AutoIndent(object sender, AutoIndentEventArgs args) {
