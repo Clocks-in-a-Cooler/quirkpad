@@ -151,40 +151,33 @@ namespace quirkpad {
             r.SetStyle(Styles.DarkCyan, StringPattern);
             
             //then colour codes
-            r.SetStyle(Styles.Crimson, @"#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
+            r.SetStyle(Styles.Crimson, @"\#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
             
             //then numbers
             r.SetStyle(Styles.Green, @"\b\d+[\.]?\d*?(px|em|pt)?\b");
             r.SetStyle(Styles.Green, @"\b\d+\.?\d*?%?"); //percents
             
-            //names of certain tag names
-            r.SetStyle(Styles.Orange, @"\b(html|body|div|p|span|form|button)\b");
+            //tags
+            r.SetStyle(Styles.Orange, @"(?<range>(area|article|aside|a|blockquote|body|button|canvas|caption|code|col|details|div|form|p)).*\{");
             
             //names of html classes
-            r.SetStyle(Styles.Blue, @"\.\w+?\b");
+            r.SetStyle(Styles.Blue, @"\." + AttributePattern + @"\b");
             
             //names of html ids
-            r.SetStyle(Styles.Pink, @"\#\w+?\b");
+            r.SetStyle(Styles.Pink, @"\#" + AttributePattern + @"\b");
             
             //psuedoclasses
-            foreach(Range ra in r.GetRanges(@":\b(\w*-?)+?\b")) {
-                ra.SetStyle(Styles.Brown, @"\b(\w*-?)+\b");
-            }
-            
-            foreach(Range ra in r.GetRanges(@"\[\b(\w*-?)+?\b\]")) {
-                ra.SetStyle(Styles.Brown, @"\b(\w*-?)+?\b");
-            }
+            r.SetStyle(Styles.Brown, @":\b(?<range>" + AttributePattern + @")\b");
+            r.SetStyle(Styles.Brown, @"\[\b(?<range>" + AttributePattern + @")\b\]");
             
             //hairy part: properties and their values
-            foreach(Range ra in r.GetRanges(@"\b(\w*-?)+?\b:")) {
-                ra.SetStyle(Styles.DarkYellow, @"\b(\w*-?)+?\b");
-            }
+            r.SetStyle(Styles.DarkYellow, CSSPropertyPattern);
             
             //match HTML colours, such as "white" and "mediumslateblue"
             r.SetStyle(Styles.Crimson, @"\b(AliceBlue|AntiqueWhite|Aqua|Aquamarine|Azure|Beige|Bisque|Black|BlanchedAlmond|Blue|BlueViolet|Brown|BurlyWood|CadetBlue|Chartreuse|Chocolate|Coral|CornflowerBlue|Cornsilk|Crimson|Cyan|DarkBlue|DarkCyan|DarkGoldenRod|DarkGray|DarkGrey|DarkGreen|DarkKhaki|DarkMagenta|DarkOliveGreen|DarkOrange|DarkOrchid|DarkRed|DarkSalmon|DarkSeaGreen|DarkSlateBlue|DarkSlateGray|DarkSlateGrey|DarkTurquoise|DarkViolet|DeepPink|DeepSkyBlue|DimGray|DimGrey|DodgerBlue|FireBrick|FloralWhite|ForestGreen|Fuchsia|Gainsboro|GhostWhite|Gold|GoldenRod|Gray|Grey|Green|GreenYellow|HoneyDew|HotPink|IndianRed|Indigo|Ivory|Khaki|Lavender|LavenderBlush|LawnGreen|LemonChiffon|LightBlue|LightCoral|LightCyan|LightGoldenRodYellow|MixLightGray|LightGrey|LightGreen|LightPink|LightSalmon|LightSeaGreen|LightSkyBlue|LightSlateGray|LightSlateGrey|LightSteelBlue|LightYellow|Lime|LimeGreen|Linen|Magenta|Maroon|MediumAquaMarine|MediumBlue|MediumOrchid|MediumPurple|MediumSeaGreen|MediumSlateBlue|MediumSpringGreen|MediumTurquoise|MediumVioletRed|MidnightBlue|MintCream|MistyRose|Moccasin|NavajoWhite|Navy|OldLace|Olive|OliveDrab|Orange|OrangeRed|Orchid|PaleGoldenRod|PaleGreen|PaleTurquoise|PaleVioletRed|PapayaWhip|PeachPuff|Peru|Pink|Plum|PowderBlue|Purple|RebeccaPurple|Red|RosyBrown|RoyalBlue|SaddleBrown|Salmon|SandyBrown|SeaGreen|SeaShell|Sienna|Silver|SkyBlue|SlateBlue|SlateGray|SlateGrey|Snow|SpringGreen|SteelBlue|Tan|Teal|Thistle|Tomato|Turquoise|Violet|Wheat|White|WhiteSmoke|Yellow|YellowGreen)\b", RegexOptions.IgnoreCase);
             
             //match values of those propeties
-            r.SetStyle(Styles.Purple, @"\b(\w*-?)+?\b");
+            r.SetStyle(Styles.Purple, AttributePattern);
         }
         
         /// <summary>
@@ -207,13 +200,13 @@ namespace quirkpad {
             }
                         
             //the links!
-            r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
             
             //strings
-            r.SetStyle(Styles.DarkCyan, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            r.SetStyle(Styles.DarkCyan, StringPattern);
             
             //escape characters
-            r.SetStyle(Styles.Crimson, @"&\w+?;");
+            r.SetStyle(Styles.Crimson, HTMLEscapePattern);
             
             //get all the css
             foreach (Range ra in r.GetRanges(@"<style[^>]*>.*?</style>", RegexOptions.Singleline)) {
@@ -260,9 +253,10 @@ namespace quirkpad {
             r.SetStyle(Styles.Green, @"\b[A-Z]\w*?\b");
             
             //methods, which are always followed by an opening parenthesis--such as "foo("
-            foreach(Range ra in r.GetRanges(@"\b\w+?\b\(")) {
-                ra.SetStyle(Styles.DarkGreen, @"\w");
-            }
+            //foreach(Range ra in r.GetRanges(@"\b\w+?\b\(")) {
+            //    ra.SetStyle(Styles.DarkGreen, @"\w");
+            //}
+            r.SetStyle(Styles.DarkGreen, @"\b(?<range>\w+?)\(");
             
             //special words
             r.SetStyle(Styles.Brown, @"\b(package|import)\b");
@@ -285,14 +279,14 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, @"[^(https?:)]//.*$", RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, @"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline |  RegexOptions.RightToLeft);
         
             //string highlighting
-            r.SetStyle(Styles.Purple, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
+            r.SetStyle(Styles.Purple, StringPattern);
             //number highlighting
-            r.SetStyle(Styles.Green, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
+            r.SetStyle(Styles.Green, NumberPattern);
             //keywords
             r.SetStyle(Styles.Orange, @"\b(break|case|catch|const|continue|default|delete|do|else|finally|for|function|if|import|in|instanceof|new|return|switch|this|throw|try|typeof|var|while|with|yield)\b");
             //get and set deserve their own
@@ -331,7 +325,7 @@ namespace quirkpad {
             r.SetStyle(Styles.Pink, @"^> .*$", RegexOptions.Multiline);
             
             //links
-            r.SetStyle(Styles.LinkStyle, @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b");
+            r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
             foreach(Range ra in r.GetRanges(@"\[.*\]")) {
                 ra.SetStyle(Styles.LinkStyle, @"[^\[\]]");
             }
@@ -340,7 +334,7 @@ namespace quirkpad {
             r.SetStyle(Styles.Magenta, @"#+ .*$", RegexOptions.Multiline);
             
             //escaped characters
-            r.SetStyle(Styles.Crimson, @"&\w+?;");
+            r.SetStyle(Styles.Crimson, HTMLEscapePattern);
             
             //code snippets
             foreach(Range ra in r.GetRanges(@"\`.*?\`")) {
