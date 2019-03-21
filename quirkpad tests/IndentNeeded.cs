@@ -7,8 +7,8 @@ public class IndentTester {
     public static string OpenBrace = @"^.*[^""'(\/\/)]*\{[^\}]*$";
     public static string CloseBrace = @"^[^\{""'(\/\/)]*\}.*$";
 	
-	public static string OpenTag = @"\<[^\/]+\>";
-	public static string CloseTag = @"\<\/.+\>";
+	public static string OpenTag = @"\<[^\/!]+\>";
+	public static string CloseTag = @"\<[^!]\/.+\>";
 	
     public static void IndentNeeded(string text) {
         if (Regex.IsMatch(text, OpenBrace) && Regex.IsMatch(text, CloseBrace)) {

@@ -10,6 +10,7 @@ namespace quirkpad {
     public static class Highlighter {
         
         //patterns, for code readability.
+        
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
         public static string ForwardSlashCommentPattern = @"[^(https?:)""']///?.*$";
@@ -34,6 +35,21 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for numbers.</summary>
         public static string NumberPattern = @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b";
+        
+        /// <summary>Regex pattern for HTML and CSS attributes.</summary>
+        public static string AttributePattern = @"(\-?\w+)+";
+        
+        /// <summary>Regex pattern for CSS properties.</summary>
+        public static string CSSPropertyPattern = @"(?<range>(\-?\w+?)+?)\s*:";
+        
+        /// <summary>Regex pattern for HTML escape characters.</summary>
+        public static string HTMLEscapePattern = @"&.*?;";
+        
+        /// <summary>Regex pattern for <c>&lt;style&gt;</c> tags within HTML.</summary>
+        public static string StyleTagPattern = @"<style[^>]*>(?<range>.*?)</style>";
+        
+        /// <summary>Regex pattern for <c>&lt;script&gt;</c> tags within HTML.</summary>
+        public static string ScriptTagPattern = @"<script[^>]*>(?<range>.*?)</script>";
         
         /// <summary>
         /// method for highlighting
@@ -359,28 +375,31 @@ namespace quirkpad {
         
         //regex patterns for various brackets and braces below.
         public static string OpenBrace = @"^.*[^""'(\/\/)]*\{[^\}]*$";
-        public static string CloseBrace = @"^.*[^""'(\/\/)\{]*\}.*$";
+        public static string CloseBrace = @"^[^\{""'(\/\/)]*\}.*$";
+        public static string OpenTag = @"\<[^\/!]+\>";
+        public static string CloseTag = @"\<\/.+\>";
         //TODO: add more patterns.
         
         ///<summary>does autoindenting</summary>
         public static void AutoIndent(object sender, AutoIndentEventArgs args) {
-            //start of a block {, [, (, or /* comments */
-            if (Regex.IsMatch(args.LineText, OpenBrace)
-            ) {
-                args.ShiftNextLines = args.TabLength;
+            if (Regex.IsMatch(args.LineText, OpenBrace) && Regex.IsMatch(args.LineText, CloseBrace)) {
+                args.Shift = -args.TabLength;
+                return;
             }
             
-            // <tags> and todo: comments in HTML
-            if (Regex.IsMatch(args.LineText, @"\<!?[^(doctype)].*[^\/]\>?", RegexOptions.IgnoreCase)) {
+            if (Regex.IsMatch(args.LineText, OpenTag) && Regex.IsMatch(args.LineText, CloseTag)) {
+                return;
+            }
+        
+            if (Regex.IsMatch(args.LineText, OpenBrace) || Regex.IsMatch(args.LineText, OpenTag)) {
                 args.ShiftNextLines = args.TabLength;
                 return;
             }
             
-            //ending a block
-            if (Regex.IsMatch(args.LineText, CloseBrace)
-            ) {
-                args.Shift          = -args.TabLength;
+            if (Regex.IsMatch(args.LineText, CloseBrace) || Regex.IsMatch(args.LineText, CloseTag)) {
+                args.Shift = -args.TabLength;
                 args.ShiftNextLines = -args.TabLength;
+                return;
             }
         }
         
