@@ -13,11 +13,11 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"[^(https?:)""']///?.*$";
+        public static string ForwardSlashCommentPattern = @"[^(https?:)""']*///?.*$";
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
-        public static string HashtagCommentPattern = @"[""']#.*$";
+        public static string HashtagCommentPattern = @"[""']*\#.*$";
         
         /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
         public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
@@ -210,24 +210,16 @@ namespace quirkpad {
             
             //get all the css
             foreach (Range ra in r.GetRanges(@"<style[^>]*>.*?</style>", RegexOptions.Singleline)) {
-                foreach (Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
-                    H_CSS(range); //i've deliberately used the greedy operator
-                }
+                H_CSS(ra.GetRanges(@"\>(?<range>.*)\<", RegexOptions.Singleline).FirstOrDefault());
             }
             
-            //attributes
-            foreach (Range ra in r.GetRanges(@"\w+\-?\=")) {
-                ra.SetStyle(Styles.Blue, @"\w+\-?");
-            }
+            r.SetStyle(Styles.Blue, @"(?<range>[\w\-]*)=");
             
             //gets all of the javascript
             foreach (Range ra in r.GetRanges(@"<script[^>]*>.*?</script>", RegexOptions.Singleline)) {
-                foreach(Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
-                    H_Javascript(range); //there should only be one, anyway
-                }
+                H_Javascript(ra.GetRanges(@"\>(?<range>.*)\<", RegexOptions.Singleline).FirstOrDefault());
             }
             //still buggy
-            
         }
         
         /// <summary>
@@ -252,10 +244,6 @@ namespace quirkpad {
             r.SetStyle(Styles.Green, @"\b(boolean|byte|char|double|enum|float|int|long|module|short|void)\b");
             r.SetStyle(Styles.Green, @"\b[A-Z]\w*?\b");
             
-            //methods, which are always followed by an opening parenthesis--such as "foo("
-            //foreach(Range ra in r.GetRanges(@"\b\w+?\b\(")) {
-            //    ra.SetStyle(Styles.DarkGreen, @"\w");
-            //}
             r.SetStyle(Styles.DarkGreen, @"\b(?<range>\w+?)\(");
             
             //special words
@@ -316,30 +304,31 @@ namespace quirkpad {
         static void H_Markdown(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
-            //finish this
-                      
+            // -, *, [-], [x], and 1. for list items
+            r.SetStyle(Styles.DarkCyan, @"^ *(?<range>[\*\-]) +.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.DarkBlue, @"^ *(?<range>\[(x|\-)\]) +.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.DarkGreen, @"^ *(?<range>\d+\.) +.*$", RegexOptions.Multiline);
+            
             //italics and bold
-            r.SetStyle(Styles.Purple, @"[\*|_]{1,2}.*?[\*|_]{1,2}");
+            r.SetStyle(Styles.Purple, @"[\*_]{1,2}.*?[\*_]{1,2}");
             
             //block quotes
-            r.SetStyle(Styles.Pink, @"^> .*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Pink, @"^> +.*$", RegexOptions.Multiline);
             
             //links
             r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
-            foreach(Range ra in r.GetRanges(@"\[.*\]")) {
-                ra.SetStyle(Styles.LinkStyle, @"[^\[\]]");
-            }
+            r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[(?<range>[^(\\\])]+)\]\(.*?\)");
+            r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[[^(\\\])]+\]\((?<range>.*?)\)");
             
             // # for headers
-            r.SetStyle(Styles.Magenta, @"#+ .*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Magenta, @"#+ +.*$", RegexOptions.Multiline);
             
             //escaped characters
             r.SetStyle(Styles.Crimson, HTMLEscapePattern);
             
             //code snippets
-            foreach(Range ra in r.GetRanges(@"\`.*?\`")) {
-                H_Javascript(ra);
-            }
+            r.SetStyle(Styles.DarkGreen, @"\`.*?\`");
+            r.SetStyle(Styles.DarkGreen, @"\`\`\`.*?\`\`\`", RegexOptions.Singleline);
         }
         
         /// <summary>
