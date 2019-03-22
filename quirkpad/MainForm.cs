@@ -80,7 +80,7 @@ namespace quirkpad {
         private void fctb_SelectionChangedDelayed(object sender, EventArgs e) {
             fctb.VisibleRange.ClearStyle(Styles.SameWords);
             if (!fctb.Selection.IsEmpty)
-                return;//user selected diapason
+                return; //user selected diapason
 
             //get fragment around caret
             var fragment = fctb.Selection.GetFragment(@"\w");
@@ -109,7 +109,6 @@ namespace quirkpad {
                     tb.DoSelectionVisible();
                     break;
                 }
-                //
                 maxIterations--;
                 if (maxIterations <= 0) break;
             }

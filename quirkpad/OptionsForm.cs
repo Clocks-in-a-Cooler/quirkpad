@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: cacan_000
  * Date: 2018/11/23
@@ -24,6 +24,7 @@ namespace quirkpad {
         
         public OptionsForm(MainForm mf) {
             mnfrm = mf;
+            
             //
             // The InitializeComponent() call is required for Windows Forms designer support.
             //
