@@ -13,11 +13,11 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"[^(https?:)""']*\/{2,3}.*$";
+        public static string ForwardSlashCommentPattern = @"^[^(https?:)]*(?<range>\/{2,3}.*$)";
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
-        public static string HashtagCommentPattern = @"[""']*\#.*$";
+        public static string HashtagCommentPattern = @"[""']*(?<range>\#.*$)";
         
         /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
         public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
@@ -300,6 +300,8 @@ namespace quirkpad {
             
             //strings. what else?
             r.SetStyle(Styles.Crimson, StringPattern);
+            r.SetStyle(Styles.Green, NumberPattern);
+            r.SetStyle(Styles.Red, @"\b(true|false|null|undefined|NaN|Infinity)\b");
         }
         
         /// <summary>
@@ -325,14 +327,8 @@ namespace quirkpad {
             
             //links
             r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
-<<<<<<< HEAD
-            foreach(Range ra in r.GetRanges(@"\[.*\]")) {
-                ra.SetStyle(Styles.LinkStyle, @"[^\[\]]");
-            }
-=======
             r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[(?<range>[^(\\\])]+)\]\(.*?\)");
             r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[[^(\\\])]+\]\((?<range>.*?)\)");
->>>>>>> 115c5a60f1fd02f98be3033b1e7eb836d717407b
             
             // # for headers
             r.SetStyle(Styles.Magenta, @"#+ +.*$", RegexOptions.Multiline);
