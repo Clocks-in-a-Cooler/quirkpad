@@ -13,11 +13,11 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"[^(https?:)""']///?.*$";
+        public static string ForwardSlashCommentPattern = @"[^(https?:)""']*\/{2,3}.*$";
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
-        public static string HashtagCommentPattern = @"[""']#.*$";
+        public static string HashtagCommentPattern = @"[""']*\#.*$";
         
         /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
         public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
@@ -97,12 +97,13 @@ namespace quirkpad {
         static void H_CSharp(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
-            //finish this
-            
             //comments first!
             r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
             r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
             r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline | RegexOptions.RightToLeft);
+            
+            //links
+            r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
             
             //then strings
             r.SetStyle(Styles.Orange, StringPattern);
@@ -118,10 +119,12 @@ namespace quirkpad {
             r.SetStyle(Styles.Magenta, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
             
             //then class names //\s+(?<range>\w+?)
-            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\b");
+            r.SetStyle(Styles.Olive, @"\b(class|struct|enum|interface|base)\b");
+            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\s+(?<range>\w+?)\b");
+            r.SetStyle(Styles.DarkGreen, @"\b(class|struct|enum|interface)\s+\w+?\s*:\s*(?<range>\w+?)\b");
             
             //then keywords
-            r.SetStyle(Styles.DarkBlue, @"\b(abstract|as|base|break|case|catch|checked|const|continue|default|do|else|explicit|extern|finally|fixed|for|foreach|goto|if|implicit|in|internal|is|lock|namespace|new|object|operator|override|private|protected|public|readonly|ref|return|sealed|sizeof|stackalloc|static|switch|this|throw|try|typeof|unchecked|unsafe|using|virtual|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|where|yield)\b");
+            r.SetStyle(Styles.DarkBlue, @"\b(abstract|as|break|case|catch|checked|const|continue|default|do|else|explicit|extern|finally|fixed|for|foreach|goto|if|implicit|in|internal|is|lock|namespace|new|object|operator|override|private|protected|public|readonly|ref|return|sealed|sizeof|stackalloc|static|switch|this|throw|try|typeof|unchecked|unsafe|using|virtual|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|where|yield)\b");
             
             //the primitive types
             r.SetStyle(Styles.Purple, @"\b(bool|byte|char|decimal|delegate|double|enum|event|float|int|interface|long|sbyte|short|string|uint|ulong|ushort|void|var|volatile)\b");
@@ -142,6 +145,8 @@ namespace quirkpad {
             
             //highlight links first
             r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
+            
+            r.SetStyle(Styles.DarkBlue, @"^\s*@import url", RegexOptions.Multiline);
             
             //then highlight comments
             r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
@@ -189,7 +194,7 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //comments first!
-            r.SetStyle(Styles.Gray, @"<!--(\n|.)*?-->", RegexOptions.Multiline);
+            r.SetStyle(Styles.Gray, @"<!--.*?-->", RegexOptions.Singleline);
             
             //the <!DOCTYPE> tag at the top
             r.SetStyle(Styles.Yellow, @"<!DOCTYPE\s\w*?>");
@@ -210,24 +215,16 @@ namespace quirkpad {
             
             //get all the css
             foreach (Range ra in r.GetRanges(@"<style[^>]*>.*?</style>", RegexOptions.Singleline)) {
-                foreach (Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
-                    H_CSS(range); //i've deliberately used the greedy operator
-                }
+                H_CSS(ra.GetRanges(@"\>(?<range>.*)\<", RegexOptions.Singleline).FirstOrDefault());
             }
             
-            //attributes
-            foreach (Range ra in r.GetRanges(@"\w+\-?\=")) {
-                ra.SetStyle(Styles.Blue, @"\w+\-?");
-            }
+            r.SetStyle(Styles.Blue, @"(?<range>[\w\-]*)=");
             
             //gets all of the javascript
             foreach (Range ra in r.GetRanges(@"<script[^>]*>.*?</script>", RegexOptions.Singleline)) {
-                foreach(Range range in ra.GetRanges(@">.*<", RegexOptions.Singleline)) {
-                    H_Javascript(range); //there should only be one, anyway
-                }
+                H_Javascript(ra.GetRanges(@"\>(?<range>.*)\<", RegexOptions.Singleline).FirstOrDefault());
             }
             //still buggy
-            
         }
         
         /// <summary>
@@ -251,11 +248,7 @@ namespace quirkpad {
             //types
             r.SetStyle(Styles.Green, @"\b(boolean|byte|char|double|enum|float|int|long|module|short|void)\b");
             r.SetStyle(Styles.Green, @"\b[A-Z]\w*?\b");
-            
-            //methods, which are always followed by an opening parenthesis--such as "foo("
-            //foreach(Range ra in r.GetRanges(@"\b\w+?\b\(")) {
-            //    ra.SetStyle(Styles.DarkGreen, @"\w");
-            //}
+
             r.SetStyle(Styles.DarkGreen, @"\b(?<range>\w+?)\(");
             
             //special words
@@ -316,30 +309,40 @@ namespace quirkpad {
         static void H_Markdown(Range r) {
             r.ClearStyle(Styles.AllStyles);
             
-            //finish this
-                      
+            // -, *, [-], [x], and 1. for list items
+            r.SetStyle(Styles.DarkCyan, @"^ *(?<range>[\*\-]) +.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.DarkCyan, @"^ *(?<range>\[(x|\-)\]) +.*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.DarkGreen, @"^ *(?<range>\d+\.) +.*$", RegexOptions.Multiline);
+            
             //italics and bold
-            r.SetStyle(Styles.Purple, @"[\*|_]{1,2}.*?[\*|_]{1,2}");
+            r.SetStyle(Styles.Purple, @"[\*_]{1,2}.*?[\*_]{1,2}");
             
             //block quotes
-            r.SetStyle(Styles.Pink, @"^> .*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Blue, @"^> +.*$", RegexOptions.Multiline);
+            
+            //lines
+            r.SetStyle(Styles.Olive, @"^\s*?[\-=]+\s*?$", RegexOptions.Multiline);
             
             //links
             r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
+<<<<<<< HEAD
             foreach(Range ra in r.GetRanges(@"\[.*\]")) {
                 ra.SetStyle(Styles.LinkStyle, @"[^\[\]]");
             }
+=======
+            r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[(?<range>[^(\\\])]+)\]\(.*?\)");
+            r.SetStyle(Styles.LinkStyle, @"[^\\]!?\[[^(\\\])]+\]\((?<range>.*?)\)");
+>>>>>>> 115c5a60f1fd02f98be3033b1e7eb836d717407b
             
             // # for headers
-            r.SetStyle(Styles.Magenta, @"#+ .*$", RegexOptions.Multiline);
+            r.SetStyle(Styles.Magenta, @"#+ +.*$", RegexOptions.Multiline);
             
             //escaped characters
             r.SetStyle(Styles.Crimson, HTMLEscapePattern);
             
             //code snippets
-            foreach(Range ra in r.GetRanges(@"\`.*?\`")) {
-                H_Javascript(ra);
-            }
+            r.SetStyle(Styles.DarkGreen, @"\`.*?\`");
+            r.SetStyle(Styles.DarkGreen, @"\`\`\`.*?\`\`\`", RegexOptions.Singleline);
         }
         
         /// <summary>
