@@ -13,11 +13,11 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"[^(https?:)""']*\/{2,3}.*$";
+        public static string ForwardSlashCommentPattern = @"^[^(https?:)]*(?<range>\/{2,3}.*$)";
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
-        public static string HashtagCommentPattern = @"[""']*\#.*$";
+        public static string HashtagCommentPattern = @"[""']*(?<range>\#.*$)";
         
         /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
         public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
