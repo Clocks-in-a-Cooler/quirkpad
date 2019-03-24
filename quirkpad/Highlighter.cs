@@ -13,7 +13,7 @@ namespace quirkpad {
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"^[^(https?:)]*(?<range>\/{2,3}.*$)";
+        public static string ForwardSlashCommentPattern = @"(?(^.*[^(https?:)])(?<range>///?.*$)|[^(https?:)](?<range>///?.*$))";
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
         /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
