@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using FastColoredTextBoxNS;
-using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 
@@ -18,9 +17,8 @@ namespace quirkpad {
         string lang = ".txt";
         
         Styles styles = new Styles();
-        string[] keywords = OptionsReader.GetKeywords();
         
-        Font textFont = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
+        Font textFont = new Font(OptionsReader.FontFamily, OptionsReader.FontSize);
         
         public MainForm()
         {
@@ -403,6 +401,14 @@ namespace quirkpad {
         void OpenFolderToolStripMenuItemClick(object sender, EventArgs e) {
             string arg = "/Select, " + "\"" + filePath + "\"";
             System.Diagnostics.Process.Start("explorer.exe", arg);
+        }
+        
+        void IncreaseIndentMenuItemClick(object sender, EventArgs e) {
+            fctb.IncreaseIndent();
+        }
+        
+        void DecreaseIndentMenuItemClick(object sender, EventArgs e) {
+            fctb.DecreaseIndent();
         }
     }
 }

@@ -12,23 +12,19 @@ namespace quirkpad {
         //patterns, for code readability.
         
         /// <summary>Regex pattern for single line comments (with the two forward slashes, <c>//</c>).</summary>
-        /// <remarks>Use with <c>RegexOptions.Multiline.</c></remarks>
-        public static string ForwardSlashCommentPattern = @"(?(^.*[^(https?:)])(?<range>///?.*$)|[^(https?:)](?<range>///?.*$))";
+        public static Regex ForwardSlashCommentPattern = new Regex(@"(?(^.*[^(https?:)])(?<range>///?.*$)|[^(https?:)](?<range>///?.*$))", RegexOptions.Multiline);
         
         /// <summary>Regex pattern for single line comments (with the hashtag, <c>#</c>).</summary>
-        /// <remarks>Use with <c>RegexOptions.Multiline</c>.</remarks>
-        public static string HashtagCommentPattern = @"[""']*(?<range>\#.*$)";
+        public static Regex HashtagCommentPattern = new Regex(@"[""']*(?<range>\#.*$)", RegexOptions.Multiline);
         
         /// <summary>Regex pattern for quotes (both single and double quotes)</summary>
-        public static string StringPattern = @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'";
+        public static Regex StringPattern = new Regex(@"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
         
         /// <summary>Regex pattern for multiline comments <c>/*</c> and <c>*/</c>.</summary>
-        /// <remarks>Use with <c>RegexOptions.Singleline</c>.</remarks>
-        public static string MultilineCommentPattern1 = @"(/\*.*?\*/)|(/\*.*)";
+        public static Regex MultilineCommentPattern1 = new Regex(@"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
         
         /// <summary>Regex pattern for multiline comments <c>/*</c> and <c>*/</c>.</summary>
-        /// <remarks>Use with <c>RegexOptions.Singleline</c> and <c>RegexOptions.RightToLeft</c>.</remarks>
-        public static string MultilineCommentPattern2 = @"(/\*.*?\*/)|(.*?\*/)";
+        public static Regex MultilineCommentPattern2 = new Regex(@"(/\*.*?\*/)|(.*?\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
         
         /// <summary>Regex pattern for hyperlinks.</summary>
         public static string HyperLinkPattern = @"\bhttps?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?\b";
@@ -98,9 +94,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //comments first!
-            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline | RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2);
             
             //links
             r.SetStyle(Styles.LinkStyle, HyperLinkPattern);
@@ -149,8 +145,8 @@ namespace quirkpad {
             r.SetStyle(Styles.DarkBlue, @"^\s*@import url", RegexOptions.Multiline);
             
             //then highlight comments
-            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2);
             
             //then strings
             r.SetStyle(Styles.DarkCyan, StringPattern);
@@ -235,9 +231,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline | RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray);
+            r.SetStyle(Styles.Gray);
+            r.SetStyle(Styles.Gray);
             
             //strings
             r.SetStyle(Styles.Orange, StringPattern);
@@ -272,9 +268,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern, RegexOptions.Multiline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern1, RegexOptions.Singleline);
-            r.SetStyle(Styles.Gray, MultilineCommentPattern2, RegexOptions.Singleline |  RegexOptions.RightToLeft);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2);
         
             //string highlighting
             r.SetStyle(Styles.Purple, StringPattern);

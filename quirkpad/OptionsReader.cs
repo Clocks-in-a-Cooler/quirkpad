@@ -7,56 +7,27 @@ namespace quirkpad {
         private static readonly string OptionsFilePath = Application.StartupPath + "\\quirkpad_settings.txt";
         public static string HighlightOption = "";
         
-        public static string[] GetKeywords() {
-            string[] keywords = new string[3];
-            int index = 0;
-            
-            if (GetLine("[keywords]", out index)) {
-                keywords = GetPlainKeywords();
-                
-                keywords[0] = @"\b(" + keywords[0].Replace(" ", "|") + @")\b";
-                keywords[1] = @"\b(" + keywords[1].Replace(" ", "|") + @")\b";
-                keywords[2] = @"\b(" + keywords[2].Replace(" ", "|") + @")\b";
-            } else {
-                keywords[0] = @"\b(int|double|float|bool|boolean|char|string|function|new|in|this|throw|String|if|else|while|do|for|switch|case|default|return|try|catch|finally|break|continue|using|import|#include|#define|#def|let|const|var|class|interface)\b";
-                keywords[1] = @"\b(void|public|private|protected|sealed|abstract|virtual|get|set)\b";
-                keywords[2] = @"\b(true|false|undefined|null|NaN|prototype|super|base|Infinity)\b";
-            }
-            
-            return keywords;
-        }
-        
-        public static string[] GetPlainKeywords() {
-            string[] keywords = new string[3];
-            int index = 0;
-            
-            if (GetLine("[keywords]", out index)) {
-                keywords[0] = File.ReadAllLines(OptionsFilePath)[index + 1];
-                keywords[1] = File.ReadAllLines(OptionsFilePath)[index + 2];
-                keywords[2] = File.ReadAllLines(OptionsFilePath)[index + 3];
-            } else {
-                keywords[0] = "";
-                keywords[1] = "";
-                keywords[2] = "";
-            }
-            
-            return keywords;
-        }
-        
-        public static void SetKeywords(string[] keywords) {
-            int index = 0;
-            
-            if (GetLine("[keywords]", out index)) {
-                string[] lines = File.ReadAllLines(OptionsFilePath);
-                
-                for (int i = 0; i < keywords.Length; i++) {
-                    lines[index + 1 + i] = keywords[i];
+        public static string FontFamily {
+            get {
+                int index = 0;
+                if (GetLine("[font]", out index)) {
+                    return File.ReadAllLines(OptionsFilePath)[index + 1];
+                } else {
+                    return "Consolas";
                 }
-                
-                File.WriteAllLines(OptionsFilePath, lines);
-            } else {
-                File.AppendAllLines(OptionsFilePath, new string[] {"[keywords]"});
-                File.AppendAllLines(OptionsFilePath, keywords);
+            }
+            set {
+                int index = 0;
+                if (GetLine("[font]", out index)) {
+                    string[] lines = File.ReadAllLines(OptionsFilePath);
+                    lines[index + 1] = value;
+                    
+                    File.WriteAllLines(OptionsFilePath, lines);
+                } else {
+                    string[] newLines = { "[font]", value };
+                    
+                    File.AppendAllLines(OptionsFilePath, newLines);
+                }
             }
         }
         
@@ -80,6 +51,35 @@ namespace quirkpad {
                 string[] newLines = new string[] { "[font]", fontName };
                 
                 File.AppendAllLines(OptionsFilePath, newLines);
+            }
+        }
+        
+        public static float FontSize {
+            get {
+                int index = 0;
+                if (GetLine("[font size]", out index)) {
+                    float f = 0.00F;
+                    if (float.TryParse(File.ReadAllLines(OptionsFilePath)[index + 1], out f)) {
+                        return f;
+                    } else {
+                        return 9.75F;
+                    }
+                } else {
+                    return 9.75F;
+                }
+            }
+            set {
+                int index = 0;
+                if (GetLine("[font size]", out index)) {
+                    string[] lines = File.ReadAllLines(OptionsFilePath);
+                    lines[index + 1] = value.ToString();
+                    
+                    File.WriteAllLines(OptionsFilePath, lines);
+                } else {
+                    string[] newLines = { "[font size]", value.ToString() };
+                    
+                    File.AppendAllLines(OptionsFilePath, newLines);
+                }
             }
         }
         
@@ -130,49 +130,6 @@ namespace quirkpad {
                 File.AppendAllLines(OptionsFilePath, newLines);
             }
         }
-        
-        /*
-        public static Theme GetTheme() {
-            int index = 0;
-            
-            
-            if (GetLine("[theme]", out index)) {
-                string themeName = File.ReadAllLines(OptionsFilePath)[index + 1];
-                
-                switch (condition) {
-                    //finish
-                }
-            } else {
-                return Themes.Default;
-            }
-        }*/
-        
-        public static void SetTheme() {
-            
-        }
-        
-        /*
-        public static Styles GetColours() {
-            int index = 0;
-            
-            /*
-             colour settings are as follows:
-             
-             [colours]
-             (comments colour)
-             (string colour)
-             (number colour)
-             (keywords colour)
-             (special keywords colour)
-             (special values colour)
-             (ordinary letters colour)
-             (everything else colour)
-             
-             if a colour is missing or invalid, it defaults to black
-           *
-            
-        }
-        */
         
         //internal method
         static bool GetLine(string match, out int index) {

@@ -36,8 +36,8 @@ namespace quirkpad {
             // TODO: Add constructor code after the InitializeComponent() call.
             //
             
-            fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
-            fontLabel2.Text = OptionsReader.GetFontOption();
+            fontLabel2.Font = new Font(OptionsReader.FontFamily, OptionsReader.FontSize);
+            fontLabel2.Text = OptionsReader.FontFamily;
             
             switch (OptionsReader.HighlightOption) {
                 case "all":
@@ -64,17 +64,18 @@ namespace quirkpad {
             
             if (fontDialog.ShowDialog() != DialogResult.Cancel ) {
                 mnfrm.SetFont(fontDialog.Font);
-                OptionsReader.SetFontOption(fontDialog.Font.FontFamily.Name);
-                OptionsReader.SetFontSize(fontDialog.Font.Size);
+                OptionsReader.FontFamily = fontDialog.Font.FontFamily.Name;
+                OptionsReader.FontSize = fontDialog.Font.Size;
                 
-                fontLabel2.Font = new Font(OptionsReader.GetFontOption(), OptionsReader.GetFontSize());
-                fontLabel2.Text = OptionsReader.GetFontOption();
+                fontLabel2.Font = new Font(OptionsReader.FontFamily, OptionsReader.FontSize);
+                fontLabel2.Text = OptionsReader.FontFamily;
             }
         }
         
         void RadioButtonCheckChanged(object sender, EventArgs e) {
-            if (sender is RadioButton) {
-                RadioButton rb = (RadioButton) sender;
+            var radioButton = sender as RadioButton;
+            if (radioButton != null) {
+                RadioButton rb = radioButton;
                 
                 if (rb == allRadioButton) {
                     OptionsReader.SetHighlightOption("all");
