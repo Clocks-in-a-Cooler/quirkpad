@@ -88,6 +88,7 @@ namespace quirkpad
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.indentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fctb)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -109,6 +110,7 @@ namespace quirkpad
             this.fctb.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\r\n^\\s*(case|default)\\s*[^:]*(" +
     "?<range>:)\\s*(?<range>[^;]+);";
             this.fctb.AutoScrollMinSize = new System.Drawing.Size(32, 15);
+            this.fctb.AutoIndentNeeded += new System.EventHandler<AutoIndentEventArgs>(this.fctb_AutoIndentNeeded);
             this.fctb.BackBrush = null;
             this.fctb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fctb.CharHeight = 15;
@@ -249,6 +251,7 @@ namespace quirkpad
             this.toolStripSeparator4,
             this.increaseIndentMenuItem,
             this.decreaseIndentMenuItem,
+            this.indentSelectionToolStripMenuItem,
             this.toolStripSeparator8,
             this.selectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -542,6 +545,13 @@ namespace quirkpad
             this.helpToolStripButton.Text = "He&lp";
             this.helpToolStripButton.Click += new System.EventHandler(this.HelpToolStripButtonClick);
             // 
+            // indentSelectionToolStripMenuItem
+            // 
+            this.indentSelectionToolStripMenuItem.Name = "indentSelectionToolStripMenuItem";
+            this.indentSelectionToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.indentSelectionToolStripMenuItem.Text = "Indent Selection";
+            this.indentSelectionToolStripMenuItem.Click += new System.EventHandler(this.IndentSelectionToolStripMenuItemClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -615,5 +625,6 @@ namespace quirkpad
         private System.Windows.Forms.ToolStripMenuItem increaseIndentMenuItem;
         private System.Windows.Forms.ToolStripMenuItem decreaseIndentMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem indentSelectionToolStripMenuItem;
     }
 }

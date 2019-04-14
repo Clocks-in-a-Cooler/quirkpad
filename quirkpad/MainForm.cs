@@ -410,5 +410,9 @@ namespace quirkpad {
         void DecreaseIndentMenuItemClick(object sender, EventArgs e) {
             fctb.DecreaseIndent();
         }
+        
+        void IndentSelectionToolStripMenuItemClick(object sender, EventArgs e) {
+            fctb.DoAutoIndent();
+        }
     }
 }
