@@ -62,6 +62,7 @@ namespace quirkpad
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.increaseIndentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseIndentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.indentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,7 +89,6 @@ namespace quirkpad
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.indentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fctb)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -110,7 +110,6 @@ namespace quirkpad
             this.fctb.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\r\n^\\s*(case|default)\\s*[^:]*(" +
     "?<range>:)\\s*(?<range>[^;]+);";
             this.fctb.AutoScrollMinSize = new System.Drawing.Size(32, 15);
-            this.fctb.AutoIndentNeeded += new System.EventHandler<AutoIndentEventArgs>(this.fctb_AutoIndentNeeded);
             this.fctb.BackBrush = null;
             this.fctb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fctb.CharHeight = 15;
@@ -135,6 +134,7 @@ namespace quirkpad
             this.fctb.Zoom = 100;
             this.fctb.TextChanged += new System.EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>(this.fctb_TextChanged);
             this.fctb.SelectionChangedDelayed += new System.EventHandler(this.fctb_SelectionChangedDelayed);
+            this.fctb.AutoIndentNeeded += new System.EventHandler<FastColoredTextBoxNS.AutoIndentEventArgs>(this.fctb_AutoIndentNeeded);
             // 
             // statusLabel
             // 
@@ -146,6 +146,7 @@ namespace quirkpad
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -330,6 +331,13 @@ namespace quirkpad
             this.decreaseIndentMenuItem.Size = new System.Drawing.Size(211, 22);
             this.decreaseIndentMenuItem.Text = "Decrease Indent";
             this.decreaseIndentMenuItem.Click += new System.EventHandler(this.DecreaseIndentMenuItemClick);
+            // 
+            // indentSelectionToolStripMenuItem
+            // 
+            this.indentSelectionToolStripMenuItem.Name = "indentSelectionToolStripMenuItem";
+            this.indentSelectionToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.indentSelectionToolStripMenuItem.Text = "Indent Selection";
+            this.indentSelectionToolStripMenuItem.Click += new System.EventHandler(this.IndentSelectionToolStripMenuItemClick);
             // 
             // toolStripSeparator8
             // 
@@ -544,13 +552,6 @@ namespace quirkpad
             this.helpToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.helpToolStripButton.Text = "He&lp";
             this.helpToolStripButton.Click += new System.EventHandler(this.HelpToolStripButtonClick);
-            // 
-            // indentSelectionToolStripMenuItem
-            // 
-            this.indentSelectionToolStripMenuItem.Name = "indentSelectionToolStripMenuItem";
-            this.indentSelectionToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.indentSelectionToolStripMenuItem.Text = "Indent Selection";
-            this.indentSelectionToolStripMenuItem.Click += new System.EventHandler(this.IndentSelectionToolStripMenuItemClick);
             // 
             // MainForm
             // 

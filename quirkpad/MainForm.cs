@@ -32,7 +32,7 @@ namespace quirkpad {
             //
             
             fctb.Font = textFont;
-                        
+
             fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
             
             OptionsReader.GetHighlightOption();
