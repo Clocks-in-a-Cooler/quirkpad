@@ -231,9 +231,9 @@ namespace quirkpad {
             r.ClearStyle(Styles.AllStyles);
             
             //highlight comments
-            r.SetStyle(Styles.Gray);
-            r.SetStyle(Styles.Gray);
-            r.SetStyle(Styles.Gray);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern1);
+            r.SetStyle(Styles.Gray, MultilineCommentPattern2);
+            r.SetStyle(Styles.Gray, ForwardSlashCommentPattern);
             
             //strings
             r.SetStyle(Styles.Orange, StringPattern);

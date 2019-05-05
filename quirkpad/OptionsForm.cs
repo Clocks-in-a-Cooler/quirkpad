@@ -57,6 +57,18 @@ namespace quirkpad {
                     highlightRangeLabel.Text = allDescription;
                     break;
             }
+            
+            switch (OptionsReader.Theme) {
+                case "dark":
+                    darkThemeRadioButton.Checked = true;
+                    break;
+                case "light":
+                    lightThemeRadioButton.Checked = true;
+                    break;
+                default:
+                    lightThemeRadioButton.Checked = true;
+                    break;
+            }
         }
         
         void ChooseFontClick(object sender, EventArgs e) {
@@ -92,6 +104,16 @@ namespace quirkpad {
                     highlightRangeLabel.Text = changedDescription;
                 }
             }
+        }
+        
+        void LightThemeRadioButtonCheckedChanged(object sender, EventArgs e) {
+            OptionsReader.Theme = "light";
+            mnfrm.ApplyTheme("light");
+        }
+        
+        void DarkThemeRadioButtonCheckedChanged(object sender, EventArgs e) {
+            OptionsReader.Theme = "dark";
+            mnfrm.ApplyTheme("dark");
         }
         
         void OkButtonClick(object sender, EventArgs e) {            

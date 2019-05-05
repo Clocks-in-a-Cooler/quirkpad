@@ -31,29 +31,6 @@ namespace quirkpad {
             }
         }
         
-        public static string GetFontOption() {
-            int index = 0;
-            if (GetLine("[font]", out index)) {
-                return File.ReadAllLines(OptionsFilePath)[index + 1];
-            } else {
-                return "Consolas";
-            }
-        }
-        
-        public static void SetFontOption(string fontName) {
-            int index = 0;
-            if (GetLine("[font]", out index)) {
-                string[] lines = File.ReadAllLines(OptionsFilePath);
-                lines[index + 1] = fontName;
-                
-                File.WriteAllLines(OptionsFilePath, lines);
-            } else {
-                string[] newLines = new string[] { "[font]", fontName };
-                
-                File.AppendAllLines(OptionsFilePath, newLines);
-            }
-        }
-        
         public static float FontSize {
             get {
                 int index = 0;
@@ -83,31 +60,24 @@ namespace quirkpad {
             }
         }
         
-        public static float GetFontSize() {
-            int index = 0;
-            if (GetLine("[font size]", out index)) {
-                float f = 0.00F;
-                if (float.TryParse(File.ReadAllLines(OptionsFilePath)[index + 1], out f)) {
-                    return f;
-                } else {
-                    return 9.75F;
-                }
-            } else {
-                return 9.75F;
+        public static string Theme {
+            get {
+                int index = 0;
+                return GetLine("[theme]", out index) ? File.ReadAllLines(OptionsFilePath)[index + 1] : "light";
             }
-        }
-        
-        public static void SetFontSize(float f) {
-            int index = 0;
-            if (GetLine("[font size]", out index)) {
-                string[] lines = File.ReadAllLines(OptionsFilePath);
-                lines[index + 1] = f.ToString();
-                
-                File.WriteAllLines(OptionsFilePath, lines);
-            } else {
-                string[] newLines = { "[font size]", f.ToString() };
-                
-                File.AppendAllLines(OptionsFilePath, newLines);
+            
+            set {
+                int index = 0;
+                if (GetLine("[theme]", out index)) {
+                    string[] lines = File.ReadAllLines(OptionsFilePath);
+                    lines[index + 1] = value;
+                    
+                    File.WriteAllLines(OptionsFilePath, lines);
+                } else {
+                    string[] newLines = { "[theme]", value };
+                    
+                    File.AppendAllLines(OptionsFilePath, newLines);
+                }
             }
         }
         

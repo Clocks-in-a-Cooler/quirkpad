@@ -32,8 +32,8 @@ namespace quirkpad {
             //
             
             fctb.Font = textFont;
-
-            fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
+            
+            ApplyTheme(OptionsReader.Theme);
             
             OptionsReader.GetHighlightOption();
             
@@ -44,6 +44,44 @@ namespace quirkpad {
         private void InitStylesPriority() {           
             //add this style explicitly for drawing under other styles
             fctb.AddStyle(Styles.SameWords);
+        }
+        
+        public void ApplyTheme(string theme) {
+            switch (theme) {
+                case "dark":
+                    //dark theme
+                    fctb.BackColor = Color.Black;
+                    fctb.CaretColor = Color.White;
+                    fctb.CurrentLineColor = Color.FromArgb(30, Color.DimGray);
+                    fctb.ForeColor = Color.White;
+                    fctb.IndentBackColor = Color.FromArgb(255, 10, 10, 10);
+                    fctb.LineNumberColor = Color.Khaki;
+                    fctb.SelectionColor = Color.FromArgb(40, Color.PaleGreen);
+                    fctb.ServiceLinesColor = Color.FromArgb(255, 10, 10, 10);
+                    break;
+                case "light":
+                    //light theme
+                    fctb.BackColor = Color.White;
+                    fctb.CaretColor = Color.Black;
+                    fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
+                    fctb.ForeColor = Color.Black;
+                    fctb.IndentBackColor = Color.WhiteSmoke;
+                    fctb.LineNumberColor = Color.Teal;
+                    fctb.SelectionColor = Color.Blue;
+                    fctb.ServiceLinesColor = Color.Silver;
+                    break;
+                default:
+                    //default: light theme
+                    fctb.BackColor = Color.White;
+                    fctb.CaretColor = Color.Black;
+                    fctb.CurrentLineColor = Color.FromArgb(30, Color.LightSeaGreen);
+                    fctb.ForeColor = Color.Black;
+                    fctb.IndentBackColor = Color.WhiteSmoke;
+                    fctb.LineNumberColor = Color.Teal;
+                    fctb.SelectionColor = Color.Blue;
+                    fctb.ServiceLinesColor = Color.Silver;
+                    break;
+            }
         }
         
         private void fctb_TextChanged(object sender, TextChangedEventArgs e) {
