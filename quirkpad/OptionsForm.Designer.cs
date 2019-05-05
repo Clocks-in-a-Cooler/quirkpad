@@ -24,6 +24,9 @@ namespace quirkpad
         private System.Windows.Forms.RadioButton changedRadioButton;
         private System.Windows.Forms.GroupBox highlightGroupBox;
         private System.Windows.Forms.Label highlightRangeLabel;
+        private System.Windows.Forms.GroupBox themeGroupBox;
+        private System.Windows.Forms.RadioButton darkThemeRadioButton;
+        private System.Windows.Forms.RadioButton lightThemeRadioButton;
         
         /// <summary>
         /// Disposes resources used by the form.
@@ -57,7 +60,11 @@ namespace quirkpad
             this.changedRadioButton = new System.Windows.Forms.RadioButton();
             this.highlightGroupBox = new System.Windows.Forms.GroupBox();
             this.highlightRangeLabel = new System.Windows.Forms.Label();
+            this.themeGroupBox = new System.Windows.Forms.GroupBox();
+            this.darkThemeRadioButton = new System.Windows.Forms.RadioButton();
+            this.lightThemeRadioButton = new System.Windows.Forms.RadioButton();
             this.highlightGroupBox.SuspendLayout();
+            this.themeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // chooseFont
@@ -81,7 +88,7 @@ namespace quirkpad
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(197, 144);
+            this.okButton.Location = new System.Drawing.Point(197, 237);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 2;
@@ -107,7 +114,6 @@ namespace quirkpad
             this.allRadioButton.TabStop = true;
             this.allRadioButton.Text = "All";
             this.allRadioButton.UseVisualStyleBackColor = true;
-            allRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
             // 
             // visibleRadioButton
             // 
@@ -118,7 +124,6 @@ namespace quirkpad
             this.visibleRadioButton.TabStop = true;
             this.visibleRadioButton.Text = "Visible";
             this.visibleRadioButton.UseVisualStyleBackColor = true;
-            visibleRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
             // 
             // changedRadioButton
             // 
@@ -129,7 +134,6 @@ namespace quirkpad
             this.changedRadioButton.TabStop = true;
             this.changedRadioButton.Text = "Changed";
             this.changedRadioButton.UseVisualStyleBackColor = true;
-            changedRadioButton.CheckedChanged += this.RadioButtonCheckChanged;
             // 
             // highlightGroupBox
             // 
@@ -152,11 +156,45 @@ namespace quirkpad
             this.highlightRangeLabel.Size = new System.Drawing.Size(137, 71);
             this.highlightRangeLabel.TabIndex = 13;
             // 
+            // themeGroupBox
+            // 
+            this.themeGroupBox.Controls.Add(this.darkThemeRadioButton);
+            this.themeGroupBox.Controls.Add(this.lightThemeRadioButton);
+            this.themeGroupBox.Location = new System.Drawing.Point(12, 145);
+            this.themeGroupBox.Name = "themeGroupBox";
+            this.themeGroupBox.Size = new System.Drawing.Size(260, 85);
+            this.themeGroupBox.TabIndex = 14;
+            this.themeGroupBox.TabStop = false;
+            this.themeGroupBox.Text = "Editor Theme";
+            // 
+            // darkThemeRadioButton
+            // 
+            this.darkThemeRadioButton.Location = new System.Drawing.Point(7, 50);
+            this.darkThemeRadioButton.Name = "darkThemeRadioButton";
+            this.darkThemeRadioButton.Size = new System.Drawing.Size(104, 24);
+            this.darkThemeRadioButton.TabIndex = 1;
+            this.darkThemeRadioButton.TabStop = true;
+            this.darkThemeRadioButton.Text = "Dark";
+            this.darkThemeRadioButton.UseVisualStyleBackColor = true;
+            this.darkThemeRadioButton.CheckedChanged += new System.EventHandler(this.DarkThemeRadioButtonCheckedChanged);
+            // 
+            // lightThemeRadioButton
+            // 
+            this.lightThemeRadioButton.Location = new System.Drawing.Point(7, 20);
+            this.lightThemeRadioButton.Name = "lightThemeRadioButton";
+            this.lightThemeRadioButton.Size = new System.Drawing.Size(104, 24);
+            this.lightThemeRadioButton.TabIndex = 0;
+            this.lightThemeRadioButton.TabStop = true;
+            this.lightThemeRadioButton.Text = "Light";
+            this.lightThemeRadioButton.UseVisualStyleBackColor = true;
+            this.lightThemeRadioButton.CheckedChanged += new System.EventHandler(this.LightThemeRadioButtonCheckedChanged);
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 177);
+            this.ClientSize = new System.Drawing.Size(284, 272);
+            this.Controls.Add(this.themeGroupBox);
             this.Controls.Add(this.highlightGroupBox);
             this.Controls.Add(this.fontLabel2);
             this.Controls.Add(this.okButton);
@@ -167,6 +205,7 @@ namespace quirkpad
             this.Name = "OptionsForm";
             this.Text = "Quirkpad Options";
             this.highlightGroupBox.ResumeLayout(false);
+            this.themeGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
