@@ -114,6 +114,7 @@ namespace quirkpad
             this.allRadioButton.TabStop = true;
             this.allRadioButton.Text = "All";
             this.allRadioButton.UseVisualStyleBackColor = true;
+            this.allRadioButton.CheckedChanged += new System.EventHandler(this.AllRadioButtonCheckedChanged);
             // 
             // visibleRadioButton
             // 
@@ -124,6 +125,7 @@ namespace quirkpad
             this.visibleRadioButton.TabStop = true;
             this.visibleRadioButton.Text = "Visible";
             this.visibleRadioButton.UseVisualStyleBackColor = true;
+            this.visibleRadioButton.CheckedChanged += new System.EventHandler(this.VisibleRadioButtonCheckedChanged);
             // 
             // changedRadioButton
             // 
@@ -134,6 +136,7 @@ namespace quirkpad
             this.changedRadioButton.TabStop = true;
             this.changedRadioButton.Text = "Changed";
             this.changedRadioButton.UseVisualStyleBackColor = true;
+            this.changedRadioButton.CheckedChanged += new System.EventHandler(this.ChangedRadioButtonCheckedChanged);
             // 
             // highlightGroupBox
             // 

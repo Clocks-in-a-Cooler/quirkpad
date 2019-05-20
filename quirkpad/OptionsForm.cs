@@ -84,28 +84,6 @@ namespace quirkpad {
             }
         }
         
-        void RadioButtonCheckChanged(object sender, EventArgs e) {
-            var radioButton = sender as RadioButton;
-            if (radioButton != null) {
-                RadioButton rb = radioButton;
-                
-                if (rb == allRadioButton) {
-                    OptionsReader.SetHighlightOption("all");
-                    highlightRangeLabel.Text = allDescription;
-                }
-                
-                if (rb == visibleRadioButton) {
-                    OptionsReader.SetHighlightOption("visible");
-                    highlightRangeLabel.Text = visibleDescription;
-                }
-                
-                if (rb == changedRadioButton) {
-                    OptionsReader.SetHighlightOption("changed");
-                    highlightRangeLabel.Text = changedDescription;
-                }
-            }
-        }
-        
         void LightThemeRadioButtonCheckedChanged(object sender, EventArgs e) {
             OptionsReader.Theme = "light";
             mnfrm.ApplyTheme("light");
@@ -118,6 +96,21 @@ namespace quirkpad {
         
         void OkButtonClick(object sender, EventArgs e) {            
             Close();
+        }
+        
+        void AllRadioButtonCheckedChanged(object sender, EventArgs e) {
+            OptionsReader.SetHighlightOption("all");
+            highlightRangeLabel.Text = allDescription;
+        }
+        
+        void VisibleRadioButtonCheckedChanged(object sender, EventArgs e) {
+            OptionsReader.SetHighlightOption("visible");
+            highlightRangeLabel.Text = visibleDescription;
+        }
+        
+        void ChangedRadioButtonCheckedChanged(object sender, EventArgs e) {
+            OptionsReader.SetHighlightOption("changed");
+            highlightRangeLabel.Text = changedDescription;
         }
     }
 }
